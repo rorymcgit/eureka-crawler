@@ -1,7 +1,13 @@
 import unittest
-from crawler.test import hello
+from crawler.crawler import Crawler
 
 class TestingCrawler(unittest.TestCase):
 
-    def test_hello(self):
-        self.assertEqual(hello("hellooo"), "hellooo")
+    def setUp(self):
+        self.crawler = Crawler()
+
+    def test_crawler_is_instance_of_crawler(self):
+        self.assertIsInstance(self.crawler, Crawler)
+
+    def test_crawl_is_a_function(self):
+        self.assertEqual(self.crawler.crawl(), 200)
