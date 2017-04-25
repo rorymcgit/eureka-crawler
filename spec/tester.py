@@ -10,4 +10,5 @@ class TestingCrawler(unittest.TestCase):
         self.assertIsInstance(self.crawler, Crawler)
 
     def test_crawl_is_a_function(self):
-        self.assertEqual(self.crawler.crawl(), 200)
+        self.crawler.crawl()
+        self.assertEqual(self.crawler.page.status_code, 200)
