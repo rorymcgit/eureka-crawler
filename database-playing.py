@@ -2,6 +2,8 @@ import psycopg2
 
 # Connect to an existing database
 conn = psycopg2.connect("dbname=testpython")
+# do we just do the above on the tests and the db_translator files?
+
 # Open a cursor to perform database operations
 cur = conn.cursor()
 

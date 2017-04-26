@@ -1,4 +1,7 @@
 import psycopg2
 
+
 class Translator():
-    "testing"
+    def set_environment(self):
+        conn = psycopg2.connect("dbname=beetle_crawler_development")
+        cur = conn.cursor()
