@@ -9,6 +9,9 @@ class TestingTranslator(unittest.TestCase):
         self.translator = Translator()
         conn = self.translator.set_environment("dbname=beetle_crawler_test")
 
+    def tearDown(self):
+        self.translator.database_cursor.execute("DELETE FROM weburls WHERE weburl='http://example.com'")
+
     def test_translator_is_instance_of_translator(self):
         self.assertIsInstance(self.translator, Translator)
 
