@@ -8,7 +8,8 @@ conn = psycopg2.connect("dbname=testpython")
 cur = conn.cursor()
 
 # Execute a command: this creates a new table
-cur.execute("CREATE TABLE weburls (id serial PRIMARY KEY, weburl varchar(65535));")
+# cur.execute("CREATE TABLE weburls (id serial PRIMARY KEY, weburl varchar(65535));")
+# CREATE TABLE weburls (id serial PRIMARY KEY, weburl varchar(65535)); #run in terminal
 
 # Pass data to fill a query placeholders and let Psycopg perform
 # the correct conversion (no more SQL injections!)
