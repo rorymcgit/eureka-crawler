@@ -5,7 +5,7 @@ class TestingCrawler(unittest.TestCase):
 
     def setUp(self):
         self.crawler = Crawler()
-        self.crawler.crawl("file:///Users/vicky/Programmes/beetlecrawler/spec/website/index.html") # insert our double here!
+        self.crawler.crawl("file:///Users/clemcapelbird/Desktop/Projects/python-final-project/beetle-crawler/spec/website/index.html") # insert our double here!
 
     def test_crawler_is_instance_of_crawler(self):
         self.assertIsInstance(self.crawler, Crawler)
