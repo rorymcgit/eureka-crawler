@@ -1,6 +1,5 @@
 import unittest
 from crawler.db_translator import Translator
-from mock import Mock
 import psycopg2
 
 class TestingTranslator(unittest.TestCase):

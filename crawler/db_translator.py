@@ -9,3 +9,4 @@ class Translator():
     def write_url(self, url):
         self.database_cursor.execute("INSERT INTO weburls (weburl) VALUES (%s)",
                 (url,))
+        self.database.commit()
