@@ -19,3 +19,10 @@ class TestingTranslator(unittest.TestCase):
         test_database_cursor = self.translator.database_cursor
         test_database_cursor.execute("SELECT * FROM weburls;")
         self.assertIn("http://example.com/", test_database_cursor.fetchone())
+
+    def test_database_writes_urls_and_titles(self):
+        self.translator.write_urls_and_titles("http://example.com", "title")
+        test_database_cursor = self.translator.database_cursor
+        test_database_cursor.execute("SELECT * FROM weburlsandtitles;")
+        self.assertIn('title', test_database_cursor.fetchone())
+        self.assertIn('http://example.com', test_database_cursor.fetchone())
