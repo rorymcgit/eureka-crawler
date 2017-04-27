@@ -4,8 +4,8 @@ from crawler.db_translator import Translator
 # translator = Translator()
 
 class Crawler():
-    def __init__(self):
-        self.translator = Translator()
+    def __init__(self, translator = Translator()):
+        self.translator = translator
         self.translator.set_environment()
 
     def crawl(self, url):
