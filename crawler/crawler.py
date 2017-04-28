@@ -5,7 +5,6 @@ from crawler.db_translator import Translator
 class Crawler():
     def __init__(self, translator = Translator()):
         self.translator = translator
-        self.translator.set_environment()
 
     def crawl(self, url):
         self.url = url
