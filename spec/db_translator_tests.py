@@ -1,28 +1,28 @@
 import unittest
-from crawler.db_translator import Translator
-import psycopg2
+import sqlalchemy
 from mock import MagicMock
+from sqlalchemy import create_engine, select, insert, MetaData, Table, delete
+from crawler.db_translator import Translator
 
 class TestingTranslator(unittest.TestCase):
 
     def setUp(self):
-        self.translator = Translator()
-        self.conn = self.translator.set_environment("dbname=beetle_crawler_test")
+        self.translator = Translator('postgresql://localhost/beetle_crawler_test')
+        self.test_database_connection = self.translator.connection
 
     def tearDown(self):
-        self.translator.database_cursor.execute("DELETE FROM weburls;")
-        self.translator.database_cursor.execute("DELETE FROM weburlsandtitles;")
-        self.translator.database.commit()
-        self.translator.database_cursor.close()
+        delete_table = delete(self.translator.weburls)
+        self.translator.connection.execute(delete_table)
+        self.translator.connection.close()
 
     def test_translator_is_instance_of_translator(self):
         self.assertIsInstance(self.translator, Translator)
 
     def test_database_writes_urls(self):
-        self.translator.write_url("http://example.com/")
-        test_database_cursor = self.translator.database_cursor
-        test_database_cursor.execute("SELECT * FROM weburls;")
-        self.assertIn("http://example.com/", test_database_cursor.fetchone())
+        self.translator.write_url("translator2test.com")
+        statement = select([self.translator.weburls])
+        results = self.test_database_connection.execute(statement)
+        self.assertIn('translator2test.com', results.fetchone()['weburl'])
 
     def test_prepare_urls_for_writing_to_db(self):
         self.translator.write_url = MagicMock()
@@ -35,13 +35,11 @@ class TestingTranslator(unittest.TestCase):
         self.assertRaises(Exception, self.translator.prepare_urls_for_writing_to_db, ['www.somecats.com'])
 
     def test_database_writes_urls_and_content(self):
-        self.translator.write_urls_and_content("http://example.com", "title", "description", "keywords")
-        test_database_cursor = self.translator.database_cursor
-        test_database_cursor.execute("SELECT * FROM weburlsandcontent;")
-        self.assertIn('http://example.com', test_database_cursor.fetchone())
-        test_database_cursor.execute("SELECT * FROM weburlsandcontent;")
-        self.assertIn('title', test_database_cursor.fetchone())
-        test_database_cursor.execute("SELECT * FROM weburlsandcontent;")
-        self.assertIn('description', test_database_cursor.fetchone())
-        test_database_cursor.execute("SELECT * FROM weburlsandcontent;")
-        self.assertIn('keywords', test_database_cursor.fetchone())
+        self.translator.write_urls_and_content("http://example.com", "example title", "example description", "example keywords")
+        statement = select([self.translator.weburlsandcontent])
+        results = self.test_database_connection.execute(statement)
+        self.assertIn('http://example.com', results.fetchone()['weburl'])
+        self.assertIn('example title', results.fetchone()['title'])
+        self.assertIn('example description', results.fetchone()['description'])
+        results = self.test_database_connection.execute(statement)
+        self.assertIn('example keywords', results.fetchone()['keywords'])
