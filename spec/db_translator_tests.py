@@ -10,8 +10,8 @@ class TestingTranslator(unittest.TestCase):
         self.conn = self.translator.set_environment("dbname=beetle_crawler_test")
 
     def tearDown(self):
-        # self.translator.database_cursor.execute("DELETE FROM weburls;")
-        # self.translator.database_cursor.execute("DELETE FROM weburlsandtitles;")
+        self.translator.database_cursor.execute("DELETE FROM weburls;")
+        self.translator.database_cursor.execute("DELETE FROM weburlsandtitles;")
         self.translator.database.commit()
         self.translator.database_cursor.close()
 
@@ -29,6 +29,7 @@ class TestingTranslator(unittest.TestCase):
         test_database_cursor = self.translator.database_cursor
         test_database_cursor.execute("SELECT * FROM weburlsandtitles;")
         self.assertIn('title', test_database_cursor.fetchone())
+        test_database_cursor.execute("SELECT * FROM weburlsandtitles;")
         self.assertIn('http://example.com', test_database_cursor.fetchone())
 
     def test_prepare_urls_for_writing_to_db(self):
@@ -36,3 +37,6 @@ class TestingTranslator(unittest.TestCase):
         retrieved_weburls = ['www.dogs.com', 'www.cats.com']
         self.translator.prepare_urls_for_writing_to_db(retrieved_weburls)
         self.assertEqual(self.translator.write_url.call_count, 2)
+
+    # def test_prepare_urls_for_writing_to_db_WONT_exceed_database_limit(self):
+    #     retrieved_weburls = []
