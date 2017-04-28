@@ -22,6 +22,7 @@ class Crawler():
         self.webpage_urls = []
         for link in self.soup.find_all('a', href=True):
             self.webpage_urls.append(link['href'])
+        self.translator.prepare_urls_for_writing_to_db(self.webpage_urls)
 
 # crawler = Crawler()
 # crawler.crawl('https://www.webpagetest.org/')
