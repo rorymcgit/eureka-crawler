@@ -43,5 +43,14 @@ class TestingTranslator(unittest.TestCase):
         self.translator.get_database_size = MagicMock(return_value=100)
         self.assertRaises(Exception, self.translator.prepare_urls_for_writing_to_db, ['www.somecats.com'])
 
-        # print(count)
-        # retrieved_weburls = []
+    def test_database_writes_urls_and_content(self):
+        self.translator.write_urls_and_content("http://example.com", "title", "description", "keywords")
+        test_database_cursor = self.translator.database_cursor
+        test_database_cursor.execute("SELECT * FROM weburlsandcontent;")
+        self.assertIn('http://example.com', test_database_cursor.fetchone())
+        test_database_cursor.execute("SELECT * FROM weburlsandcontent;")
+        self.assertIn('title', test_database_cursor.fetchone())
+        test_database_cursor.execute("SELECT * FROM weburlsandcontent;")
+        self.assertIn('description', test_database_cursor.fetchone())
+        test_database_cursor.execute("SELECT * FROM weburlsandcontent;")
+        self.assertIn('keywords', test_database_cursor.fetchone())

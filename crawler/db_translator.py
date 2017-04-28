@@ -15,6 +15,11 @@ class Translator():
                 (url, title,))
         self.database.commit()
 
+    def write_urls_and_content(self, url, title, description, keywords):
+        self.database_cursor.execute("INSERT INTO weburlsandcontent (weburl, title, description, keywords) VALUES (%s, %s, %s, %s)",
+                (url, title, description, keywords,))
+        self.database.commit()
+
     def prepare_urls_for_writing_to_db(self, weburls_array):
         for url in weburls_array:
             if self.get_database_size() < 100:
@@ -26,4 +31,6 @@ class Translator():
         self.database_cursor.execute("SELECT * FROM weburls;")
         return self.database_cursor.rowcount
 
-    #check database length. while < 200 add urls to db (call write url).
+
+# update write_urls_and_titles so that it now saves: url, title, description, keywords
+# create new method and then move over to.
