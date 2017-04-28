@@ -35,6 +35,4 @@ class TestingTranslator(unittest.TestCase):
         self.translator.write_url = MagicMock()
         retrieved_weburls = ['www.dogs.com', 'www.cats.com']
         self.translator.prepare_urls_for_writing_to_db(retrieved_weburls)
-        calls = [self.translator.write_url('www.dogs.com'), self.translator.write_url('www.cats.com')]
-        self.translator.write_url.assert_has_calls(calls)
-        # self.translator.write_url.assert_called_with('www.cats.com')
+        self.assertEqual(self.translator.write_url.call_count, 2)
