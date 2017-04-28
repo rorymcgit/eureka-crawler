@@ -15,7 +15,13 @@ class Crawler():
     def return_content(self):
         self.soup = BeautifulSoup(self.page, "html.parser")
         self.webpage_title = self.soup.title.string
+        self.save_found_weburls()
         self.translator.write_urls_and_titles(self.url, self.webpage_title)
+
+    def save_found_weburls(self):
+        self.webpage_urls = []
+        for link in self.soup.find_all('a', href=True):
+            self.webpage_urls.append(link['href'])
 
 # crawler = Crawler()
 # crawler.crawl('https://www.webpagetest.org/')

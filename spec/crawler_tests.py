@@ -32,3 +32,7 @@ class TestingCrawler(unittest.TestCase):
         crawler_three.url = 'http://www.google.com'
         crawler_three.return_content()
         self.translator.write_urls_and_titles.assert_called_once_with('http://www.google.com', 'Cats and Dogs')
+
+    def test_return_content_saves_all_urls_from_webpage(self):
+        self.crawler.return_content()
+        self.assertIn("www.dogs.com", self.crawler.webpage_urls)
