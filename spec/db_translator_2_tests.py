@@ -1,7 +1,9 @@
 import unittest
 import sqlalchemy
+from mock import MagicMock
 from sqlalchemy import create_engine, select, insert, MetaData, Table, delete
 from crawler.db_translator2 import Translator
+
 
 class TestingTranslator(unittest.TestCase):
 
@@ -22,3 +24,9 @@ class TestingTranslator(unittest.TestCase):
         statement = select([self.translator.weburls])
         results = self.test_database_connection.execute(statement)
         self.assertIn('translator2test.com', results.fetchone()['weburl'])
+
+    def test_prepare_urls_for_writing_to_db(self):
+        self.translator.write_url = MagicMock()
+        retrieved_weburls = ['www.dogs.com', 'www.cats.com']
+        self.translator.prepare_urls_for_writing_to_db(retrieved_weburls)
+        self.assertEqual(self.translator.write_url.call_count, 2)
