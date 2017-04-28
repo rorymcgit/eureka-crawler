@@ -21,8 +21,9 @@ class TestingCrawler(unittest.TestCase):
         self.crawler.crawl(self.local_html_file)
         self.translator.write_url.assert_called_once_with(self.local_html_file)
 
-    def test_return_all_content_saves_all_urls_from_webpage_in_an_array(self):
-        self.crawler.return_all_content()
+    def test_save_found_weburls_saves_all_urls_from_webpage_in_an_array(self):
+        self.crawler.soup = BeautifulSoup('<!DOCTYPE html>\n<html>\n\n<head>\n <title>Cats and Dogs</title>\n</head><body><a href="www.dogs.com">Dogs</a><a href="www.cats.com">Cats</a></body></html>', 'html.parser')
+        self.crawler.save_found_weburls()
         self.assertIn("www.dogs.com", self.crawler.webpage_urls)
 
     def test_translator_called_in_save_found_weburls(self):
