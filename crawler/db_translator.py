@@ -1,26 +1,30 @@
-import psycopg2
 import sqlalchemy
+from sqlalchemy import create_engine, select, insert, MetaData, Table
 
 class Translator():
-    #  CRUD actions with the database
-    # def set_environment(self, db = "dbname=beetle_crawler_development"):
-        # self.engine = create_engine(db)
-    def set_environment(self, db = "dbname=beetle_crawler_development"):
-        self.database = psycopg2.connect(db)
-        self.database_cursor = self.database.cursor()
-        # Initiates a connection to the database set in the parameter
-        # Allows Python code to execute PostgreSQL command in a database session
-
+    def __init__(self, db = 'postgresql://localhost/beetle_crawler_development'):
+        self.database_engine = create_engine(db)
+        self.connection = self.database_engine.connect()
+        metadata = MetaData()
+        self.weburls = Table('weburls', metadata, autoload = True, autoload_with = self.database_engine)
+        self.weburlsandcontent = Table('weburlsandcontent', metadata, autoload = True, autoload_with = self.database_engine)
 
     def write_url(self, url):
-        self.database_cursor.execute("INSERT INTO weburls (weburl) VALUES (%s)",
-        # writes collected url to the weburls table in the database
-                (url,))
-        self.database.commit()
-        # Commits your changes in the database
+        statement = insert(self.weburls).values(weburl = url)
+        self.connection.execute(statement)
 
+    def write_urls_and_content(self, url, title, description, keywords):
+        statement = insert(self.weburlsandcontent).values(weburl = url, title = title, description = description, keywords = keywords)
+        self.connection.execute(statement)
 
-    def write_urls_and_titles(self, url, title):
-        self.database_cursor.execute("INSERT INTO weburlsandtitles (weburl, title) VALUES (%s, %s)",
-                (url, title,))
-        self.database.commit()
+    def prepare_urls_for_writing_to_db(self, weburls_array):
+        for url in weburls_array:
+            if self.get_database_size() < 1000:
+                self.write_url(url)
+            else:
+                raise Exception
+
+    def get_database_size(self):
+        select_all = select([self.weburls])
+        results = self.connection.execute(select_all)
+        return results.rowcount

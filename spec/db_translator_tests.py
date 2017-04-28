@@ -2,7 +2,7 @@ import unittest
 import sqlalchemy
 from mock import MagicMock
 from sqlalchemy import create_engine, select, insert, MetaData, Table, delete
-from crawler.db_translator2 import Translator
+from crawler.db_translator import Translator
 
 
 class TestingTranslator(unittest.TestCase):

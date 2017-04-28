@@ -1,6 +1,6 @@
 import urllib.request
 from bs4 import BeautifulSoup
-from crawler.db_translator2 import Translator
+from crawler.db_translator import Translator
 
 class Crawler():
     def __init__(self, translator = Translator()):
