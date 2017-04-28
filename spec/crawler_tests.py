@@ -49,3 +49,8 @@ class TestingCrawler(unittest.TestCase):
         self.assertIn("Cats and Dogs", self.crawler.webpage_title)
         self.assertIn("Page about cats and dogs", self.crawler.webpage_description)
         self.assertIn("cats,dogs", self.crawler.webpage_keywords)
+
+    def test_translator_called_in_return_all_content(self):
+        self.translator.write_urls_and_content = MagicMock()
+        self.crawler.return_all_content()
+        self.translator.write_urls_and_content.assert_called_once_with(self.local_html_file, 'Cats and Dogs', 'Page about cats and dogs', 'cats,dogs')

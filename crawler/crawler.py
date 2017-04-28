@@ -23,6 +23,8 @@ class Crawler():
         self.webpage_title = self.soup.title.string
         self.webpage_description = self.soup.find("meta", {"name":"description"})['content']
         self.webpage_keywords = self.soup.find("meta", {"name":"keywords"})['content']
+        self.save_found_weburls()
+        self.translator.write_urls_and_content(self.url, self.webpage_title, self.webpage_description, self.webpage_keywords)
 
     def save_found_weburls(self):
         self.webpage_urls = []
@@ -35,4 +37,4 @@ class Crawler():
 
 # crawler = Crawler()
 # crawler.crawl('https://www.webpagetest.org/')
-# crawler.return_content()
+# crawler.return_all_content()

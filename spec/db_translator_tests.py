@@ -40,7 +40,7 @@ class TestingTranslator(unittest.TestCase):
 
     def test_prepare_urls_for_writing_to_db_WONT_exceed_database_limit(self):
         # working out how to count the length of the database and stop urls being added.
-        self.translator.get_database_size = MagicMock(return_value=100)
+        self.translator.get_database_size = MagicMock(return_value=1000)
         self.assertRaises(Exception, self.translator.prepare_urls_for_writing_to_db, ['www.somecats.com'])
 
     def test_database_writes_urls_and_content(self):
