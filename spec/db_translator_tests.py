@@ -11,8 +11,10 @@ class TestingTranslator(unittest.TestCase):
         self.test_database_connection = self.translator.connection
 
     def tearDown(self):
-        delete_table = delete(self.translator.weburls)
-        self.translator.connection.execute(delete_table)
+        delete_weburl_table = delete(self.translator.weburls)
+        delete_weburl_and_content_table = delete(self.translator.weburlsandcontent)
+        self.translator.connection.execute(delete_weburl_table)
+        self.translator.connection.execute(delete_weburl_and_content_table)
         self.translator.connection.close()
 
     def test_translator_is_instance_of_translator(self):
@@ -39,7 +41,9 @@ class TestingTranslator(unittest.TestCase):
         statement = select([self.translator.weburlsandcontent])
         results = self.test_database_connection.execute(statement)
         self.assertIn('http://example.com', results.fetchone()['weburl'])
+        results = self.test_database_connection.execute(statement)
         self.assertIn('example title', results.fetchone()['title'])
+        results = self.test_database_connection.execute(statement)
         self.assertIn('example description', results.fetchone()['description'])
         results = self.test_database_connection.execute(statement)
         self.assertIn('example keywords', results.fetchone()['keywords'])
