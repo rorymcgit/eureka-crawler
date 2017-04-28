@@ -14,20 +14,22 @@ class Translator():
         statement = insert(self.weburls).values(weburl = url)
         self.connection.execute(statement)
 
+
     # def write_urls_and_content(self, url, title, description, keywords):
     #     self.database_cursor.execute("INSERT INTO weburlsandcontent (weburl, title, description, keywords) VALUES (%s, %s, %s, %s)",
     #             (url, title, description, keywords,))
     #     self.database.commit()
     #
     def prepare_urls_for_writing_to_db(self, weburls_array):
-        count = 0
         for url in weburls_array:
-            if count < 1000:
+            if self.get_database_size() < 1000:
                 self.write_url(url)
-                count += 1
             else:
                 raise Exception
-    #
-    # def get_database_size(self):
+
+    def get_database_size(self):
+        select_all = select([self.weburls])
+        results = self.connection.execute(select_all)
+        return results.rowcount
     #     self.database_cursor.execute("SELECT * FROM weburls;")
     #     return self.database_cursor.rowcount

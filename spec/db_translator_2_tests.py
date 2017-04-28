@@ -30,3 +30,7 @@ class TestingTranslator(unittest.TestCase):
         retrieved_weburls = ['www.dogs.com', 'www.cats.com']
         self.translator.prepare_urls_for_writing_to_db(retrieved_weburls)
         self.assertEqual(self.translator.write_url.call_count, 2)
+
+    def test_prepare_urls_for_writing_to_db_WONT_exceed_database_limit(self):
+        self.translator.get_database_size = MagicMock(return_value=1000)
+        self.assertRaises(Exception, self.translator.prepare_urls_for_writing_to_db, ['www.somecats.com'])
