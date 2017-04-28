@@ -2,7 +2,6 @@ import unittest
 from mock import Mock
 from mock import MagicMock
 from crawler.crawler import Crawler
-from crawler.db_translator import Translator
 from bs4 import BeautifulSoup
 import os
 
