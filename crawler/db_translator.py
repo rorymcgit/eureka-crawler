@@ -17,6 +17,13 @@ class Translator():
 
     def prepare_urls_for_writing_to_db(self, weburls_array):
         for url in weburls_array:
-            self.write_url(url)
+            if self.get_database_size() < 100:
+                self.write_url(url)
+            else:
+                raise Exception
 
-    #check database length. while < 200 add urls to db (call write url). 
+    def get_database_size(self):
+        self.database_cursor.execute("SELECT * FROM weburls;")
+        return self.database_cursor.rowcount
+
+    #check database length. while < 200 add urls to db (call write url).

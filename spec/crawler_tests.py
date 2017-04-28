@@ -11,9 +11,18 @@ class TestingCrawler(unittest.TestCase):
     def setUp(self):
         self.translator = Translator()
         self.translator.set_environment("dbname=beetle_crawler_test")
+
+        self.translator = MagicMock
+
         self.crawler = Crawler(self.translator)
         self.local_html_file = "file://" + (os.path.abspath("spec/website/index.html"))
         self.crawler.crawl(self.local_html_file)
+
+    def tearDown(self):
+        self.translator.database_cursor.execute("DELETE FROM weburls;")
+        self.translator.database_cursor.execute("DELETE FROM weburlsandtitles;")
+        self.translator.database.commit()
+        self.translator.database_cursor.close()
 
     def test_crawler_is_instance_of_crawler(self):
         self.assertIsInstance(self.crawler, Crawler)
@@ -25,6 +34,7 @@ class TestingCrawler(unittest.TestCase):
         self.translator.write_url.assert_called_once_with(self.local_html_file)
 
     def test_crawl_returns_content(self):
+
         self.crawler.return_content()
         self.assertIn("Cats and Dogs", self.crawler.webpage_title)
 
