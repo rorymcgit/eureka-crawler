@@ -1,6 +1,7 @@
 import unittest
 from crawler.db_translator import Translator
 import psycopg2
+from mock import MagicMock
 
 class TestingTranslator(unittest.TestCase):
 
@@ -29,3 +30,11 @@ class TestingTranslator(unittest.TestCase):
         test_database_cursor.execute("SELECT * FROM weburlsandtitles;")
         self.assertIn('title', test_database_cursor.fetchone())
         self.assertIn('http://example.com', test_database_cursor.fetchone())
+
+    def test_prepare_urls_for_writing_to_db(self):
+        self.translator.write_url = MagicMock()
+        retrieved_weburls = ['www.dogs.com', 'www.cats.com']
+        self.translator.prepare_urls_for_writing_to_db(retrieved_weburls)
+        calls = [self.translator.write_url('www.dogs.com'), self.translator.write_url('www.cats.com')]
+        self.translator.write_url.assert_has_calls(calls)
+        # self.translator.write_url.assert_called_with('www.cats.com')

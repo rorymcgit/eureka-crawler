@@ -14,3 +14,7 @@ class Translator():
         self.database_cursor.execute("INSERT INTO weburlsandtitles (weburl, title) VALUES (%s, %s)",
                 (url, title,))
         self.database.commit()
+
+    def prepare_urls_for_writing_to_db(self, weburls_array):
+        for url in weburls_array:
+            self.write_url(url)
