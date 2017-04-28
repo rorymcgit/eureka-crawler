@@ -1,6 +1,6 @@
 import unittest
 import sqlalchemy
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, select, insert, MetaData, Table
 from crawler.db_translator2 import Translator
 
 class TestingTranslator(unittest.TestCase):
@@ -14,5 +14,7 @@ class TestingTranslator(unittest.TestCase):
     def test_translator_is_instance_of_translator(self):
         self.assertIsInstance(self.translator, Translator)
 
-    # def test_database_writes_urls(self):
-        # self.translator.write_url("translator2test.com")
+    def test_database_writes_urls(self):
+        self.translator.write_url("translator2test.com")
+        test_database_connection = self.translator.connection
+        statement = select([self.translator.weburls])
