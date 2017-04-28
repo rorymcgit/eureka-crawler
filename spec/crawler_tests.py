@@ -43,3 +43,9 @@ class TestingCrawler(unittest.TestCase):
         self.crawler.save_found_weburls()
         test_urls_array = ['www.dogs.com', 'www.cats.com']
         self.translator.prepare_urls_for_writing_to_db.assert_called_once_with(test_urls_array)
+
+    def test_crawl_returns_all_content(self):
+        self.crawler.return_all_content()
+        self.assertIn("Cats and Dogs", self.crawler.webpage_title)
+        self.assertIn("Page about cats and dogs", self.crawler.webpage_description)
+        self.assertIn("cats,dogs", self.crawler.webpage_keywords)

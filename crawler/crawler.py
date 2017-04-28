@@ -18,6 +18,12 @@ class Crawler():
         self.save_found_weburls()
         self.translator.write_urls_and_titles(self.url, self.webpage_title)
 
+    def return_all_content(self):
+        self.soup = BeautifulSoup(self.page, "html.parser")
+        self.webpage_title = self.soup.title.string
+        self.webpage_description = self.soup.find("meta", {"name":"description"})['content']
+        self.webpage_keywords = self.soup.find("meta", {"name":"keywords"})['content']
+
     def save_found_weburls(self):
         self.webpage_urls = []
         for link in self.soup.find_all('a', href=True):
