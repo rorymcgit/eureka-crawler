@@ -9,11 +9,9 @@ class TestingTranslator(unittest.TestCase):
         self.translator = Translator('postgresql://localhost/beetle_crawler_test')
         self.test_database_connection = self.translator.connection
 
-
     def tearDown(self):
-        # statement = select([self.translator.weburls])
-        # _delete = delete(statement)
-        # self.translator.connection.execute(_delete)
+        delete_table = delete(self.translator.weburls)
+        self.translator.connection.execute(delete_table)
         self.translator.connection.close()
 
     def test_translator_is_instance_of_translator(self):
