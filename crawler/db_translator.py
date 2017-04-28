@@ -9,12 +9,7 @@ class Translator():
         self.database = psycopg2.connect(db)
         self.database_cursor = self.database.cursor()
         # Initiates a connection to the database set in the parameter
-
         # Allows Python code to execute PostgreSQL command in a database session
-
-    # def write_url(self, url):
-    #     table.insert().values(name='foo')
-
 
 
     def write_url(self, url):
