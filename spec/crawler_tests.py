@@ -4,6 +4,7 @@ from mock import MagicMock
 from crawler.crawler import Crawler
 from crawler.db_translator import Translator
 from bs4 import BeautifulSoup
+import os
 
 class TestingCrawler(unittest.TestCase):
 
@@ -11,7 +12,8 @@ class TestingCrawler(unittest.TestCase):
         self.translator = Translator()
         self.translator.set_environment("dbname=beetle_crawler_test")
         self.crawler = Crawler(self.translator)
-        self.crawler.crawl("file:///Users/rorymcguinness/Desktop/Makers/Week_11/FINAL_PROJ/beetle-crawler/spec/website/index.html")
+        self.local_html_file = "file://" + (os.path.abspath("spec/website/index.html"))
+        self.crawler.crawl(self.local_html_file)
 
     def test_crawler_is_instance_of_crawler(self):
         self.assertIsInstance(self.crawler, Crawler)
@@ -19,8 +21,8 @@ class TestingCrawler(unittest.TestCase):
     def test_translator_called_in_crawl(self):
         self.translator.write_url = MagicMock()
         crawler_two = Crawler(self.translator)
-        crawler_two.crawl("file:///Users/rorymcguinness/Desktop/Makers/Week_11/FINAL_PROJ/beetle-crawler/spec/website/index.html")
-        self.translator.write_url.assert_called_once_with("file:///Users/rorymcguinness/Desktop/Makers/Week_11/FINAL_PROJ/beetle-crawler/spec/website/index.html")
+        crawler_two.crawl(self.local_html_file)
+        self.translator.write_url.assert_called_once_with(self.local_html_file)
 
     def test_crawl_returns_content(self):
         self.crawler.return_content()

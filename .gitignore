@@ -1,3 +1,4 @@
 crawler/__pycache__/
 spec/__pycache__/
 .DS_Store
+.ENV
