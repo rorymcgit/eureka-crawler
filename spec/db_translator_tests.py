@@ -24,14 +24,6 @@ class TestingTranslator(unittest.TestCase):
         test_database_cursor.execute("SELECT * FROM weburls;")
         self.assertIn("http://example.com/", test_database_cursor.fetchone())
 
-    def test_database_writes_urls_and_titles(self):
-        self.translator.write_urls_and_titles("http://example.com", "title")
-        test_database_cursor = self.translator.database_cursor
-        test_database_cursor.execute("SELECT * FROM weburlsandtitles;")
-        self.assertIn('title', test_database_cursor.fetchone())
-        test_database_cursor.execute("SELECT * FROM weburlsandtitles;")
-        self.assertIn('http://example.com', test_database_cursor.fetchone())
-
     def test_prepare_urls_for_writing_to_db(self):
         self.translator.write_url = MagicMock()
         retrieved_weburls = ['www.dogs.com', 'www.cats.com']
@@ -39,7 +31,6 @@ class TestingTranslator(unittest.TestCase):
         self.assertEqual(self.translator.write_url.call_count, 2)
 
     def test_prepare_urls_for_writing_to_db_WONT_exceed_database_limit(self):
-        # working out how to count the length of the database and stop urls being added.
         self.translator.get_database_size = MagicMock(return_value=1000)
         self.assertRaises(Exception, self.translator.prepare_urls_for_writing_to_db, ['www.somecats.com'])
 

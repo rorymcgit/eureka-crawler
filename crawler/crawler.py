@@ -12,12 +12,6 @@ class Crawler():
         self.page = urllib.request.urlopen(url).read()
         self.translator.write_url(url)
 
-    def return_content(self):
-        self.soup = BeautifulSoup(self.page, "html.parser")
-        self.webpage_title = self.soup.title.string
-        self.save_found_weburls()
-        self.translator.write_urls_and_titles(self.url, self.webpage_title)
-
     def return_all_content(self):
         self.soup = BeautifulSoup(self.page, "html.parser")
         self.webpage_title = self.soup.title.string
