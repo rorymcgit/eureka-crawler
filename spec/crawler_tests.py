@@ -38,7 +38,7 @@ class TestingCrawler(unittest.TestCase):
     def test_return_all_content_calls_translator_write_urls_and_content(self):
         self.translator.write_urls_and_content = MagicMock()
         self.crawler.return_all_content()
-        self.translator.write_urls_and_content.assert_called_once_with(self.local_html_file, 'Cats and Dogs', 'Page about cats and dogs', 'cats,dogs')
+        self.translator.write_urls_and_content.assert_called_once_with(self.local_html_file, "Cats and Dogs", "Page about cats and dogs", "cats,dogs")
 
 
     def test_save_found_weburls_saves_all_urls_from_webpage_in_an_array(self):
@@ -50,10 +50,9 @@ class TestingCrawler(unittest.TestCase):
         self.translator.prepare_urls_for_writing_to_db = MagicMock()
         test_soup = BeautifulSoup('<!DOCTYPE html>\n<html>\n\n<head>\n <title>Cats and Dogs</title>\n</head><body><a href="www.dogs.com">Dogs</a><a href="www.cats.com">Cats</a></body></html>', 'html.parser')
         self.crawler.save_found_weburls(test_soup)
-        test_urls_array = ['www.dogs.com', 'www.cats.com']
+        test_urls_array = ["www.dogs.com", "www.cats.com"]
         self.translator.prepare_urls_for_writing_to_db.assert_called_once_with(test_urls_array)
 
 # New tests below
     def test_crawl_accepts_and_assigns_url(self):
-        self.crawler.crawl(self.local_html_file)
         self.assertEqual(self.crawler.url, self.local_html_file)
