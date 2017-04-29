@@ -22,14 +22,14 @@ class TestingCrawler(unittest.TestCase):
         self.translator.write_url.assert_called_once_with(self.local_html_file)
 
     def test_save_found_weburls_saves_all_urls_from_webpage_in_an_array(self):
-        self.crawler.soup = BeautifulSoup('<!DOCTYPE html>\n<html>\n\n<head>\n <title>Cats and Dogs</title>\n</head><body><a href="www.dogs.com">Dogs</a><a href="www.cats.com">Cats</a></body></html>', 'html.parser')
-        self.crawler.save_found_weburls()
+        test_soup = BeautifulSoup('<!DOCTYPE html>\n<html>\n\n<head>\n <title>Cats and Dogs</title>\n</head><body><a href="www.dogs.com">Dogs</a><a href="www.cats.com">Cats</a></body></html>', 'html.parser')
+        self.crawler.save_found_weburls(test_soup)
         self.assertIn("www.dogs.com", self.crawler.webpage_urls)
 
     def test_translator_called_in_save_found_weburls(self):
         self.translator.prepare_urls_for_writing_to_db = MagicMock()
-        self.crawler.soup = BeautifulSoup('<!DOCTYPE html>\n<html>\n\n<head>\n <title>Cats and Dogs</title>\n</head><body><a href="www.dogs.com">Dogs</a><a href="www.cats.com">Cats</a></body></html>', 'html.parser')
-        self.crawler.save_found_weburls()
+        test_soup = BeautifulSoup('<!DOCTYPE html>\n<html>\n\n<head>\n <title>Cats and Dogs</title>\n</head><body><a href="www.dogs.com">Dogs</a><a href="www.cats.com">Cats</a></body></html>', 'html.parser')
+        self.crawler.save_found_weburls(test_soup)
         test_urls_array = ['www.dogs.com', 'www.cats.com']
         self.translator.prepare_urls_for_writing_to_db.assert_called_once_with(test_urls_array)
 
@@ -47,3 +47,5 @@ class TestingCrawler(unittest.TestCase):
     def test_crawl_accepts_and_assigns_url(self):
         self.crawler.crawl(self.local_html_file)
         self.assertEqual(self.crawler.url, self.local_html_file)
+
+    # def
