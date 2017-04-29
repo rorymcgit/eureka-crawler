@@ -45,6 +45,7 @@ class TestingCrawler(unittest.TestCase):
         test_soup = BeautifulSoup('<!DOCTYPE html>\n<html>\n\n<head>\n <title>Cats and Dogs</title>\n</head><body><a href="www.dogs.com">Dogs</a><a href="www.cats.com">Cats</a></body></html>', 'html.parser')
         self.crawler.save_found_weburls(test_soup)
         self.assertIn("www.dogs.com", self.crawler.webpage_urls)
+        self.assertIn("www.cats.com", self.crawler.webpage_urls)
 
     def test_save_found_weburls_calls_translator_prepare_urls_for_writing_to_db(self):
         self.translator.prepare_urls_for_writing_to_db = MagicMock()
@@ -53,6 +54,18 @@ class TestingCrawler(unittest.TestCase):
         test_urls_array = ["www.dogs.com", "www.cats.com"]
         self.translator.prepare_urls_for_writing_to_db.assert_called_once_with(test_urls_array)
 
-# New tests below
+###################
+# New tests below #
+###################
+
+
     def test_crawl_accepts_and_assigns_url(self):
         self.assertEqual(self.crawler.url, self.local_html_file)
+
+
+    # not sure if this one is necessary...
+    def test_save_found_weburls_does_not_save_title(self):
+        test_soup = BeautifulSoup('<!DOCTYPE html>\n<html>\n\n<head>\n <title>Cats and Dogs</title>\n</head><body><a href="www.dogs.com">Dogs</a><a href="www.cats.com">Cats</a></body></html>', 'html.parser')
+        self.crawler.save_found_weburls(test_soup)
+        test_title = test_soup.title.string
+        self.assertNotIn(test_title, self.crawler.webpage_urls)
