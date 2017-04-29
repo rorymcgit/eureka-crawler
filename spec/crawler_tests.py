@@ -57,5 +57,3 @@ class TestingCrawler(unittest.TestCase):
     def test_crawl_accepts_and_assigns_url(self):
         self.crawler.crawl(self.local_html_file)
         self.assertEqual(self.crawler.url, self.local_html_file)
-
-    def
