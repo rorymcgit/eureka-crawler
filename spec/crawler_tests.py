@@ -43,3 +43,7 @@ class TestingCrawler(unittest.TestCase):
         self.translator.write_urls_and_content = MagicMock()
         self.crawler.return_all_content()
         self.translator.write_urls_and_content.assert_called_once_with(self.local_html_file, 'Cats and Dogs', 'Page about cats and dogs', 'cats,dogs')
+
+    def test_crawl_accepts_and_assigns_url(self):
+        self.crawler.crawl(self.local_html_file)
+        self.assertEqual(self.crawler.url, self.local_html_file)
