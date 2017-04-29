@@ -17,8 +17,8 @@ class Translator():
         statement = insert(self.weburlsandcontent).values(weburl = url, title = title, description = description, keywords = keywords)
         self.connection.execute(statement)
 
-    def prepare_urls_for_writing_to_db(self, weburls_array):
-        for url in weburls_array:
+    def prepare_urls_for_writing_to_db(self, weburls):
+        for url in weburls:
             if self.get_database_size() < 1000:
                 self.write_url(url)
             else:
@@ -26,5 +26,4 @@ class Translator():
 
     def get_database_size(self):
         select_all = select([self.weburls])
-        results = self.connection.execute(select_all)
-        return results.rowcount
+        return self.connection.execute(select_all).rowcount

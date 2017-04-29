@@ -17,16 +17,19 @@ class TestingTranslator(unittest.TestCase):
         self.translator.connection.execute(delete_weburl_and_content_table)
         self.translator.connection.close()
 
-    def test_translator_is_instance_of_translator(self):
+
+    def test_translator_is_instance_of_Translator(self):
         self.assertIsInstance(self.translator, Translator)
 
-    def test_database_writes_urls(self):
-        self.translator.write_url("translator2test.com")
+
+    def test_write_urls_saves_urls_to_database(self):
+        self.translator.write_url('translator2test.com')
         statement = select([self.translator.weburls])
         results = self.test_database_connection.execute(statement)
         self.assertIn('translator2test.com', results.fetchone()['weburl'])
 
-    def test_prepare_urls_for_writing_to_db(self):
+
+    def test_prepare_urls_for_writing_to_db_calls_write_url(self):
         self.translator.write_url = MagicMock()
         retrieved_weburls = ['www.dogs.com', 'www.cats.com']
         self.translator.prepare_urls_for_writing_to_db(retrieved_weburls)
@@ -36,8 +39,9 @@ class TestingTranslator(unittest.TestCase):
         self.translator.get_database_size = MagicMock(return_value=1000)
         self.assertRaises(Exception, self.translator.prepare_urls_for_writing_to_db, ['www.somecats.com'])
 
-    def test_database_writes_urls_and_content(self):
-        self.translator.write_urls_and_content("http://example.com", "example title", "example description", "example keywords")
+
+    def test_write_urls_and_content_saves_everything_to_database(self):
+        self.translator.write_urls_and_content('http://example.com', 'example title', 'example description', 'example keywords')
         statement = select([self.translator.weburlsandcontent])
         results = self.test_database_connection.execute(statement)
         self.assertIn('http://example.com', results.fetchone()['weburl'])
