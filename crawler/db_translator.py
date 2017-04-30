@@ -10,9 +10,9 @@ class Translator():
         self.weburlsandcontent = Table('weburlsandcontent', metadata, autoload = True, autoload_with = self.database_engine)
 
     def write_url(self, url):
-        self.url_checker(url)
-        statement = insert(self.weburls).values(weburl = url)
-        self.connection.execute(statement)
+        if self.url_checker(url):
+            statement = insert(self.weburls).values(weburl = url)
+            self.connection.execute(statement)
 
     def write_urls_and_content(self, url, title, description, keywords):
         statement = insert(self.weburlsandcontent).values(weburl = url, title = title, description = description, keywords = keywords)

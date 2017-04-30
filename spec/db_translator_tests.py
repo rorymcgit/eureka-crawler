@@ -28,7 +28,7 @@ class TestingTranslator(unittest.TestCase):
 
     def test_prepare_urls_for_writing_to_db_calls_write_url(self):
         self.translator.write_url = MagicMock()
-        retrieved_weburls = ['www.dogs.com', 'www.cats.com']
+        retrieved_weburls = ['http://www.dogs.com', 'http://www.cats.com']
         self.translator.prepare_urls_for_writing_to_db(retrieved_weburls)
         self.assertEqual(self.translator.write_url.call_count, 2)
 
@@ -38,10 +38,10 @@ class TestingTranslator(unittest.TestCase):
 
 
     def test_write_urls_saves_urls_to_database(self):
-        self.translator.write_url('translator2test.com')
+        self.translator.write_url('http://translator2test.com')
         statement = select([self.translator.weburls])
         results = self.test_database_connection.execute(statement)
-        self.assertIn('translator2test.com', results.fetchone()['weburl'])
+        self.assertIn('http://translator2test.com', results.fetchone()['weburl'])
 
 
     def test_write_urls_and_content_saves_everything_to_database(self):
@@ -58,8 +58,8 @@ class TestingTranslator(unittest.TestCase):
 
 
     def test_get_weburls_table_size(self):
-        self.translator.write_url('translator3test.com')
-        self.translator.write_url('translator4test.com')
+        self.translator.write_url('http://translator3test.com')
+        self.translator.write_url('http://translator4test.com')
         self.assertEqual(self.translator.get_weburls_table_size(), 2)
 
 
