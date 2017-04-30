@@ -8,6 +8,7 @@ class Translator():
         metadata = MetaData()
         self.weburls = Table('weburls', metadata, autoload = True, autoload_with = self.database_engine)
         self.weburlsandcontent = Table('weburlsandcontent', metadata, autoload = True, autoload_with = self.database_engine)
+        self.current_id = 1
 
     def write_url(self, url):
         statement = insert(self.weburls).values(weburl = url)
@@ -16,6 +17,7 @@ class Translator():
     def write_urls_and_content(self, url, title, description, keywords):
         statement = insert(self.weburlsandcontent).values(weburl = url, title = title, description = description, keywords = keywords)
         self.connection.execute(statement)
+        self.current_id += 1
 
     def prepare_urls_for_writing_to_db(self, weburls):
         for url in weburls:
