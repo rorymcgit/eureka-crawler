@@ -13,6 +13,7 @@ class TestingTranslator(unittest.TestCase):
     def tearDown(self):
         delete_weburl_table = delete(self.translator.weburls)
         delete_weburl_and_content_table = delete(self.translator.weburlsandcontent)
+        self.translator.connection.execute('TRUNCATE TABLE weburls RESTART IDENTITY;')
         self.translator.connection.execute(delete_weburl_table)
         self.translator.connection.execute(delete_weburl_and_content_table)
         self.translator.connection.close()
@@ -62,14 +63,9 @@ class TestingTranslator(unittest.TestCase):
     def test_write_urls_and_content_increases_current_id_by_1(self):
         self.translator.write_urls_and_content('http://example.com', 'example title', 'example description', 'example keywords')
 
-        # s = select([self.translator.weburls])
-        # result = self.test_database_connection.execute(s)
-        # print(result.fetchall())
-
-        my_url = select([self.translator.weburls]).where(self.translator.weburls.c.id == 265)
+        my_url = select([self.translator.weburls]).where(self.translator.weburls.c.id == 1)
         result_proxy = self.test_database_connection.execute(my_url)
-        # print(result_proxy.fetchall())
-        # print(result_proxy.fetchone()['weburl'])
+        print(result_proxy.fetchall())
 
         self.assertEqual(self.translator.current_id, 2)
 
