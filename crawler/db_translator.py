@@ -12,7 +12,6 @@ class Translator():
     def write_url(self, url):
         if self.url_checker(url):
             url = self.cut_string(url)
-            print(url)
             statement = insert(self.weburls).values(weburl = url)
             self.connection.execute(statement)
 
@@ -47,5 +46,8 @@ class Translator():
         return len(haystack)-len(parts[-1])-len(needle)
 
     def cut_string(self, url):
-        string_cut = self.find_nth(url, '/', 3)
-        return url[:string_cut]
+        if url.count('/') >= 4:
+            string_cut = self.find_nth(url, '/', 3)
+            return url[:string_cut]
+        else:
+            return url
