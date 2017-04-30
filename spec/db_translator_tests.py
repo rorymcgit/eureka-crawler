@@ -68,3 +68,8 @@ class TestingTranslator(unittest.TestCase):
         self.translator.write_url('translator3test.com')
         self.translator.write_url('translator4test.com')
         self.assertEqual(self.translator.get_weburls_table_size(), 2)
+
+    # def test_write_urls_and_content_calls_get_next_url(self):
+    #     self.translator.get_next_url = MagicMock()
+    #     self.translator.write_urls_and_content('http://example.com', 'example title', 'example description', 'example keywords')
+    #     self.assertCalled(self.translator.get_next_url)
