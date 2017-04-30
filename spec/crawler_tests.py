@@ -48,6 +48,7 @@ class TestingCrawler(unittest.TestCase):
         self.crawler.return_all_content()
         self.translator.get_next_url.assert_called_once()
 
+
     def test_save_found_weburls_saves_all_urls_from_webpage_in_an_array(self):
         test_soup = BeautifulSoup('<!DOCTYPE html>\n<html>\n\n<head>\n <title>Cats and Dogs</title>\n</head><body><a href="www.dogs.com">Dogs</a><a href="www.cats.com">Cats</a></body></html>', 'html.parser')
         self.crawler.save_found_weburls(test_soup)
@@ -66,3 +67,7 @@ class TestingCrawler(unittest.TestCase):
         self.crawler.save_found_weburls(test_soup)
         test_title = test_soup.title.string
         self.assertNotIn(test_title, self.crawler.webpage_urls)
+
+
+    # def test_crawl_next_url(self):
+    #     self.translator.crawl_next_url

@@ -30,6 +30,10 @@ class Translator():
         select_all = select([self.weburls])
         return self.connection.execute(select_all).rowcount
 
+    def get_weburls_and_content_table_size(self):
+        select_all = select([self.weburlsandcontent])
+        return self.connection.execute(select_all).rowcount
+
     def get_next_url(self):
         my_url = select([self.weburls]).where(self.weburls.c.id == self.current_id)
         return self.connection.execute(my_url).fetchone()['weburl']

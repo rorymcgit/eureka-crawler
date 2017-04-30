@@ -71,6 +71,10 @@ class TestingTranslator(unittest.TestCase):
         self.translator.write_url('translator4test.com')
         self.assertEqual(self.translator.get_weburls_table_size(), 2)
 
+    def test_get_weburls_and_content_table_size(self):
+        self.translator.write_urls_and_content('http://someexample.com', 'some example title', 'some example description', 'some example keywords')
+        self.translator.write_urls_and_content('http://example.com', 'another example title', 'another example description', 'another example keywords')
+        self.assertEqual(self.translator.get_weburls_and_content_table_size(), 2)
 
     def test_get_next_url_exists(self):
         self.assertTrue(self.translator.get_next_url)
