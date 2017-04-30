@@ -31,4 +31,6 @@ class Translator():
         return self.connection.execute(select_all).rowcount
 
     def get_next_url(self):
-        print('Exists!')
+        my_url = select([self.weburls]).where(self.weburls.c.id == self.current_id)
+        result_proxy = self.connection.execute(my_url)
+        return result_proxy.fetchone()['weburl']

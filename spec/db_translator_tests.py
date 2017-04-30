@@ -11,11 +11,11 @@ class TestingTranslator(unittest.TestCase):
         self.test_database_connection = self.translator.connection
 
     def tearDown(self):
-        delete_weburl_table = delete(self.translator.weburls)
-        delete_weburl_and_content_table = delete(self.translator.weburlsandcontent)
-        self.translator.connection.execute('TRUNCATE TABLE weburls RESTART IDENTITY;')
-        self.translator.connection.execute(delete_weburl_table)
-        self.translator.connection.execute(delete_weburl_and_content_table)
+        # delete_weburl_table = delete(self.translator.weburls)
+        # delete_weburl_and_content_table = delete(self.translator.weburlsandcontent)
+        # self.translator.connection.execute('TRUNCATE TABLE weburls RESTART IDENTITY;')
+        # self.translator.connection.execute(delete_weburl_table)
+        # self.translator.connection.execute(delete_weburl_and_content_table)
         self.translator.connection.close()
 
 
@@ -62,11 +62,6 @@ class TestingTranslator(unittest.TestCase):
 
     def test_write_urls_and_content_increases_current_id_by_1(self):
         self.translator.write_urls_and_content('http://example.com', 'example title', 'example description', 'example keywords')
-
-        my_url = select([self.translator.weburls]).where(self.translator.weburls.c.id == 1)
-        result_proxy = self.test_database_connection.execute(my_url)
-        print(result_proxy.fetchall())
-
         self.assertEqual(self.translator.current_id, 2)
 
 
@@ -79,7 +74,10 @@ class TestingTranslator(unittest.TestCase):
     def test_get_next_url_exists(self):
         self.assertTrue(self.translator.get_next_url)
 
-    # def test_get_next_url_retrieves_second_url_in_table(self):
+    def test_get_next_url_retrieves_second_url_in_table(self):
+        self.translator.write_urls_and_content('http://example.com', 'example title', 'example description', 'example keywords')
+        self.translator.write_urls_and_content('http://example2.com', 'example2 title', 'example2 description', 'example2 keywords')
+        self.assertEqual(self.translator.get_next_url(), 'http://example2.com')
 
 
 
