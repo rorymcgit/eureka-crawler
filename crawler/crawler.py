@@ -1,6 +1,6 @@
 import urllib.request
 from bs4 import BeautifulSoup
-from crawler.db_translator import Translator
+from db_translator import Translator
 
 class Crawler():
     def __init__(self, translator = Translator()):
@@ -25,6 +25,9 @@ class Crawler():
             self.webpage_urls.append(link['href'])
         self.translator.prepare_urls_for_writing_to_db(self.webpage_urls)
 
-# crawler = Crawler()
-# crawler.crawl('https://www.webpagetest.org/')
-# crawler.return_all_content()
+    def find_webpage_title(self, soup):
+        return soup.title.string
+
+crawler = Crawler()
+crawler.crawl('https://fatlama.com/')
+crawler.return_all_content()
