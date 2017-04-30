@@ -80,10 +80,4 @@ class TestingTranslator(unittest.TestCase):
         test_weburls_array = ["www.dogs.com", "www.cats.com"]
         self.translator.prepare_urls_for_writing_to_db(test_weburls_array)
         self.translator.write_urls_and_content('http://example.com', 'example title', 'example description', 'example keywords')
-        self.assertEqual(self.translator.next_url_to_crawl, 'www.dogs.com')
-
-
-    def test_write_urls_and_content_calls_get_next_url(self):
-        self.translator.get_next_url = MagicMock()
-        self.translator.write_urls_and_content('http://example.com', 'example title', 'example description', 'example keywords')
-        self.translator.get_next_url.assert_called_once()
+        self.assertEqual(self.translator.get_next_url(), 'www.dogs.com')
