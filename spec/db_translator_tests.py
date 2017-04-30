@@ -70,3 +70,8 @@ class TestingTranslator(unittest.TestCase):
 
     def test_url_checker_saves_only_urls_beginning_http(self):
         self.assertEqual(self.translator.url_checker('https://www.example.com/'), True)
+        self.assertEqual(self.translator.url_checker('www.example.com/'), False)
+
+    def test_url_checker_saves_only_urls_ending_com_or_uk(self):
+        self.assertEqual(self.translator.url_checker('https://www.example.com/'), True)
+        self.assertEqual(self.translator.url_checker('https://www.example.cz/'), False)
