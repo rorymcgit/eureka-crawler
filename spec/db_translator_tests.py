@@ -20,6 +20,10 @@ class TestingTranslator(unittest.TestCase):
 
     def test_translator_is_instance_of_Translator(self):
         self.assertIsInstance(self.translator, Translator)
+        
+    def test_translator_initializes_with_tables(self):
+        self.assertIsInstance(self.translator.weburls, Table)
+        self.assertIsInstance(self.translator.weburlsandcontent, Table)
 
 
     def test_prepare_urls_for_writing_to_db_calls_write_url(self):
@@ -51,16 +55,13 @@ class TestingTranslator(unittest.TestCase):
         self.assertIn('example description', results.fetchone()['description'])
         results = self.test_database_connection.execute(statement)
         self.assertIn('example keywords', results.fetchone()['keywords'])
+        
 
-###################
-# New tests below #
-###################
-
-    def test_translator_initializes_with_tables(self):
-        self.assertIsInstance(self.translator.weburls, Table)
-        self.assertIsInstance(self.translator.weburlsandcontent, Table)
-
-    def test_translator_get_weburls_table_size(self):
+    def test_get_weburls_table_size(self):
         self.translator.write_url('translator3test.com')
         self.translator.write_url('translator4test.com')
         self.assertEqual(self.translator.get_weburls_table_size(), 2)
+
+
+
+
