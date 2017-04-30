@@ -30,7 +30,7 @@ class Translator():
         return self.connection.execute(select_all).rowcount
 
     def url_checker(self, url):
-        return url.startswith( 'http' ) and ('.com' or '.co.uk') in url
+        return url.startswith( 'http' ) and ('.co.uk' in url or '.com' in url)
 
 
     #check for http first
