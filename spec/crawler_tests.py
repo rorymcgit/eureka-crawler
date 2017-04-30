@@ -58,12 +58,9 @@ class TestingCrawler(unittest.TestCase):
 # New tests below #
 ###################
 
-
     def test_crawl_accepts_and_assigns_url(self):
         self.assertEqual(self.crawler.url, self.local_html_file)
 
-
-    # not sure if this one is necessary...
     def test_save_found_weburls_does_not_save_title(self):
         test_soup = BeautifulSoup('<!DOCTYPE html>\n<html>\n\n<head>\n <title>Cats and Dogs</title>\n</head><body><a href="www.dogs.com">Dogs</a><a href="www.cats.com">Cats</a></body></html>', 'html.parser')
         self.crawler.save_found_weburls(test_soup)
