@@ -8,6 +8,7 @@ class Translator():
         metadata = MetaData()
         self.weburls = Table('weburls', metadata, autoload = True, autoload_with = self.database_engine)
         self.weburlsandcontent = Table('weburlsandcontent', metadata, autoload = True, autoload_with = self.database_engine)
+        self.database_limit = 1000
         self.current_id = 1
 
     def write_url(self, url):

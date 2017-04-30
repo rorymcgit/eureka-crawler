@@ -20,6 +20,9 @@ class TestingTranslator(unittest.TestCase):
         self.translator.connection.close()
 
 
+    def test_translator_initializes_with_a_database_limit_of_1000(self):
+        self.assertEqual(self.translator.database_limit, 1000)
+
     def test_translator_is_instance_of_Translator(self):
         self.assertIsInstance(self.translator, Translator)
 

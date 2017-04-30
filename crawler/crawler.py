@@ -19,7 +19,9 @@ class Crawler():
         self.webpage_keywords = soup.find("meta", {"name":"keywords"})['content']
         self.translator.write_urls_and_content(self.url, self.webpage_title, self.webpage_description, self.webpage_keywords)
         next_url_to_crawl = self.translator.get_next_url()
-        # while self.translator.get_weburls_table_size()
+        while self.translator.get_weburls_table_size() < self.translator.database_limit and self.translator.get_weburls_and_content_table_size() < self.translator.database_limit:
+            self.crawl(next_url_to_crawl)
+
 
     def save_found_weburls(self, soup):
         self.webpage_urls = []

@@ -9,6 +9,10 @@ class TestingCrawler(unittest.TestCase):
 
     def setUp(self):
         self.translator = MagicMock()
+        self.translator.get_weburls_table_size = MagicMock(return_value=50)
+        self.translator.get_weburls_and_content_table_size = MagicMock(return_value=10)
+        self.translator.get_next_url = MagicMock(return_value='http://www.exampletest.com')
+        self.translator.database_limit = 10
         self.crawler = Crawler(self.translator)
         self.local_html_file = "file://" + (os.path.abspath("spec/website/index.html"))
         self.crawler.crawl(self.local_html_file)
@@ -68,6 +72,7 @@ class TestingCrawler(unittest.TestCase):
         test_title = test_soup.title.string
         self.assertNotIn(test_title, self.crawler.webpage_urls)
 
-
-    # def test_crawl_next_url(self):
-    #     self.translator.crawl_next_url
+    def test_crawl_next_url_will_not_crawl_when_both_tables_are_full(self):
+        self.translator.get_weburls_table_size = MagicMock(return_value=1000)
+        self.translator.get_weburls_and_content_table_size = MagicMock(return_value=1000)
+        self.assertEqual(self.translator.crawl_next_url(), 'The databases are full')
