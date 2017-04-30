@@ -37,12 +37,6 @@ class Crawler():
         except:
             return ''
 
-    # def find_webpage_keywords(self, soup):
-    #     try:
-    #         return soup.find("meta", {"name":"keywords"})['content']
-    #     except:
-    #         return ''
-
 # crawler = Crawler()
 # crawler.crawl("file:///Users/vicky/Programmes/beetlecrawler/spec/website/test.html")
 # crawler.return_all_content()
