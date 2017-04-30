@@ -75,4 +75,5 @@ class TestingTranslator(unittest.TestCase):
     def test_url_checker_saves_only_urls_ending_com_or_uk(self):
         self.assertEqual(self.translator.check_url_domain('https://www.example.com/'), True)
         self.assertEqual(self.translator.check_url_domain('https://www.example.co.uk/'), True)
+        self.assertEqual(self.translator.check_url_domain('https://www.example.org/'), True)
         self.assertEqual(self.translator.check_url_domain('https://www.example.cz/'), False)

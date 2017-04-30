@@ -36,6 +36,7 @@ class Translator():
         return url.startswith( 'http' )
 
     def check_url_domain(self, url):
-        return ('.co.uk' in url or '.com' in url)
+        return '.co.uk' in url or '.com' in url or '.org' in url
 
     # def cut url
+    #find nth & then url[:to nth]
