@@ -30,7 +30,12 @@ class Translator():
         return self.connection.execute(select_all).rowcount
 
     def url_checker(self, url):
-        return url.startswith( 'http' ) and ('.co.uk' in url or '.com' in url)
+        return self.check_url_beginning(url) and self.check_url_domain(url)
 
+    def check_url_beginning(self, url):
+        return url.startswith( 'http' )
 
-    #check for http first
+    def check_url_domain(self, url):
+        return ('.co.uk' in url or '.com' in url)
+
+    # def cut url
