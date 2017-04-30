@@ -1,6 +1,6 @@
 import urllib.request
 from bs4 import BeautifulSoup
-from db_translator import Translator
+from crawler.db_translator import Translator
 
 class Crawler():
     def __init__(self, translator = Translator()):
@@ -14,8 +14,8 @@ class Crawler():
     def return_all_content(self):
         soup = BeautifulSoup(self.page, "html.parser")
         self.save_found_weburls(soup)
-        self.webpage_title = soup.title.string
-        self.webpage_description = soup.find("meta", {"name":"description"})['content']
+        self.webpage_title = self.find_webpage_title(soup)
+        self.webpage_description = self.find_webpage_description(soup)
         self.webpage_keywords = soup.find("meta", {"name":"keywords"})['content']
         self.translator.write_urls_and_content(self.url, self.webpage_title, self.webpage_description, self.webpage_keywords)
 
@@ -26,8 +26,17 @@ class Crawler():
         self.translator.prepare_urls_for_writing_to_db(self.webpage_urls)
 
     def find_webpage_title(self, soup):
-        return soup.title.string
+        if soup.title == None:
+            return ''
+        else:
+            return soup.title.string
 
-crawler = Crawler()
-crawler.crawl('https://fatlama.com/')
-crawler.return_all_content()
+    def find_webpage_description(self, soup):
+        try:
+            return soup.find("meta", {"name":"description"})['content']
+        except:
+            return ''
+
+# crawler = Crawler()
+# crawler.crawl("file:///Users/vicky/Programmes/beetlecrawler/spec/website/test.html")
+# crawler.return_all_content()

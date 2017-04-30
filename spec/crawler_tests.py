@@ -14,7 +14,7 @@ class TestingCrawler(unittest.TestCase):
         self.crawler.crawl(self.local_html_file)
 
     def get_test_soup(self):
-        test_soup = BeautifulSoup('<!DOCTYPE html>\n<html>\n\n<head>\n <title>Cats and Dogs</title>\n</head><body><a href="www.dogs.com">Dogs</a><a href="www.cats.com">Cats</a></body></html>', 'html.parser')
+        test_soup = BeautifulSoup('<!DOCTYPE html>\n<html>\n\n<head>\n <title>Cats and Dogs</title> \n<meta name="description" content="Page about cats and dogs"> \n <meta name="keywords" content="cats,dogs">\n</head><body><a href="www.dogs.com">Dogs</a><a href="www.cats.com">Cats</a></body></html>', 'html.parser')
         return test_soup
 
     def test_crawler_is_instance_of_Crawler(self):
@@ -66,3 +66,8 @@ class TestingCrawler(unittest.TestCase):
     def test_find_webpage_title_returns_webpage_title(self):
         run_find_webpage = self.crawler.find_webpage_title(self.get_test_soup())
         self.assertEqual(run_find_webpage, 'Cats and Dogs')
+        # test for the none!
+
+    def test_find_description_returns_webpage_description(self):
+        run_find_webpage = self.crawler.find_webpage_description(self.get_test_soup())
+        self.assertEqual(run_find_webpage, 'Page about cats and dogs')
