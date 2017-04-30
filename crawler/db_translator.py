@@ -9,7 +9,6 @@ class Translator():
         self.weburls = Table('weburls', metadata, autoload = True, autoload_with = self.database_engine)
         self.weburlsandcontent = Table('weburlsandcontent', metadata, autoload = True, autoload_with = self.database_engine)
         self.current_id = 1
-        print(type(self.weburls.c.col1))
 
     def write_url(self, url):
         statement = insert(self.weburls).values(weburl = url)

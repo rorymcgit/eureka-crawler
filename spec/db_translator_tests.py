@@ -61,6 +61,16 @@ class TestingTranslator(unittest.TestCase):
 
     def test_write_urls_and_content_increases_current_id_by_1(self):
         self.translator.write_urls_and_content('http://example.com', 'example title', 'example description', 'example keywords')
+
+        # s = select([self.translator.weburls])
+        # result = self.test_database_connection.execute(s)
+        # print(result.fetchall())
+
+        my_url = select([self.translator.weburls]).where(self.translator.weburls.c.id == 265)
+        result_proxy = self.test_database_connection.execute(my_url)
+        # print(result_proxy.fetchall())
+        # print(result_proxy.fetchone()['weburl'])
+
         self.assertEqual(self.translator.current_id, 2)
 
 
@@ -69,8 +79,12 @@ class TestingTranslator(unittest.TestCase):
         self.translator.write_url('translator4test.com')
         self.assertEqual(self.translator.get_weburls_table_size(), 2)
 
+
     def test_get_next_url_exists(self):
         self.assertTrue(self.translator.get_next_url)
+
+    # def test_get_next_url_retrieves_second_url_in_table(self):
+
 
 
     # def test_write_urls_and_content_calls_get_next_url(self):
