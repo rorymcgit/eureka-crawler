@@ -10,6 +10,7 @@ class Translator():
         self.weburlsandcontent = Table('weburlsandcontent', metadata, autoload = True, autoload_with = self.database_engine)
 
     def write_url(self, url):
+        self.url_checker(url)
         statement = insert(self.weburls).values(weburl = url)
         self.connection.execute(statement)
 
@@ -27,3 +28,9 @@ class Translator():
     def get_weburls_table_size(self):
         select_all = select([self.weburls])
         return self.connection.execute(select_all).rowcount
+
+    def url_checker(self, url):
+        return url.startswith( 'http' )
+
+
+    #check for http first

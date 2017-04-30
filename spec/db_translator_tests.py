@@ -20,7 +20,7 @@ class TestingTranslator(unittest.TestCase):
 
     def test_translator_is_instance_of_Translator(self):
         self.assertIsInstance(self.translator, Translator)
-        
+
     def test_translator_initializes_with_tables(self):
         self.assertIsInstance(self.translator.weburls, Table)
         self.assertIsInstance(self.translator.weburlsandcontent, Table)
@@ -55,7 +55,7 @@ class TestingTranslator(unittest.TestCase):
         self.assertIn('example description', results.fetchone()['description'])
         results = self.test_database_connection.execute(statement)
         self.assertIn('example keywords', results.fetchone()['keywords'])
-        
+
 
     def test_get_weburls_table_size(self):
         self.translator.write_url('translator3test.com')
@@ -63,5 +63,10 @@ class TestingTranslator(unittest.TestCase):
         self.assertEqual(self.translator.get_weburls_table_size(), 2)
 
 
+    def test_url_checker_is_called_by_write_url(self):
+        self.translator.url_checker = MagicMock()
+        self.translator.write_url('https://www.example.com/')
+        self.translator.url_checker.assert_called_once_with('https://www.example.com/')
 
-
+    def test_url_checker_saves_only_urls_beginning_http(self):
+        self.assertEqual(self.translator.url_checker('https://www.example.com/'), True)
