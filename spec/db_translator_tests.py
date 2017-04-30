@@ -1,5 +1,6 @@
 import unittest
 import sqlalchemy
+import mock
 from mock import MagicMock
 from sqlalchemy import create_engine, select, insert, MetaData, Table, delete
 from crawler.db_translator import Translator
@@ -11,11 +12,11 @@ class TestingTranslator(unittest.TestCase):
         self.test_database_connection = self.translator.connection
 
     def tearDown(self):
-        # delete_weburl_table = delete(self.translator.weburls)
-        # delete_weburl_and_content_table = delete(self.translator.weburlsandcontent)
-        # self.translator.connection.execute('TRUNCATE TABLE weburls RESTART IDENTITY;')
-        # self.translator.connection.execute(delete_weburl_table)
-        # self.translator.connection.execute(delete_weburl_and_content_table)
+        delete_weburl_table = delete(self.translator.weburls)
+        delete_weburl_and_content_table = delete(self.translator.weburlsandcontent)
+        self.translator.connection.execute('TRUNCATE TABLE weburls RESTART IDENTITY;')
+        self.translator.connection.execute(delete_weburl_table)
+        self.translator.connection.execute(delete_weburl_and_content_table)
         self.translator.connection.close()
 
 
@@ -75,13 +76,14 @@ class TestingTranslator(unittest.TestCase):
         self.assertTrue(self.translator.get_next_url)
 
     def test_get_next_url_retrieves_second_url_in_table(self):
+        self.translator.write_url('www.example1.com')
+        test_weburls_array = ["www.dogs.com", "www.cats.com"]
+        self.translator.prepare_urls_for_writing_to_db(test_weburls_array)
         self.translator.write_urls_and_content('http://example.com', 'example title', 'example description', 'example keywords')
-        self.translator.write_urls_and_content('http://example2.com', 'example2 title', 'example2 description', 'example2 keywords')
-        self.assertEqual(self.translator.get_next_url(), 'http://example2.com')
+        self.assertEqual(self.translator.next_url_to_crawl, 'www.dogs.com')
 
 
-
-    # def test_write_urls_and_content_calls_get_next_url(self):
-    #     self.translator.get_next_url = MagicMock()
-    #     self.translator.write_urls_and_content('http://example.com', 'example title', 'example description', 'example keywords')
-    #     self.assertCalled(self.translator.get_next_url)
+    def test_write_urls_and_content_calls_get_next_url(self):
+        self.translator.get_next_url = MagicMock()
+        self.translator.write_urls_and_content('http://example.com', 'example title', 'example description', 'example keywords')
+        self.translator.get_next_url.assert_called_once()

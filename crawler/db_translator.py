@@ -18,6 +18,7 @@ class Translator():
         statement = insert(self.weburlsandcontent).values(weburl = url, title = title, description = description, keywords = keywords)
         self.connection.execute(statement)
         self.current_id += 1
+        self.get_next_url()
 
     def prepare_urls_for_writing_to_db(self, weburls):
         for url in weburls:
@@ -32,5 +33,6 @@ class Translator():
 
     def get_next_url(self):
         my_url = select([self.weburls]).where(self.weburls.c.id == self.current_id)
-        result_proxy = self.connection.execute(my_url)
-        return result_proxy.fetchone()['weburl']
+        print(self.current_id)
+        self.next_url_to_crawl = self.connection.execute(my_url).fetchone()['weburl']
+        return self.next_url_to_crawl
