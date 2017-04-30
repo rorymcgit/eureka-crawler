@@ -56,6 +56,10 @@ class TestingTranslator(unittest.TestCase):
         results = self.test_database_connection.execute(statement)
         self.assertIn('example keywords', results.fetchone()['keywords'])
 
+    def test_write_url_calls_cut_string(self):
+        self.translator.cut_string = MagicMock()
+        self.translator.write_url('https://www.example.com/home/page')
+        self.translator.cut_string.assert_called_once_with('https://www.example.com/home/page')
 
     def test_get_weburls_table_size(self):
         self.translator.write_url('http://translator3test.com')

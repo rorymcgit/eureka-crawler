@@ -11,6 +11,8 @@ class Translator():
 
     def write_url(self, url):
         if self.url_checker(url):
+            url = self.cut_string(url)
+            print(url)
             statement = insert(self.weburls).values(weburl = url)
             self.connection.execute(statement)
 
