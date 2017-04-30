@@ -69,5 +69,9 @@ class TestingCrawler(unittest.TestCase):
         # test for the none!
 
     def test_find_description_returns_webpage_description(self):
-        run_find_webpage = self.crawler.find_webpage_description(self.get_test_soup())
+        run_find_webpage = self.crawler.find_webpage_metadata(self.get_test_soup(), 'description')
         self.assertEqual(run_find_webpage, 'Page about cats and dogs')
+
+    def test_find_keywords_returns_webpage_description(self):
+        run_find_webpage = self.crawler.find_webpage_metadata(self.get_test_soup(), 'keywords')
+        self.assertEqual(run_find_webpage, 'cats,dogs')

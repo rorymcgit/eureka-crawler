@@ -15,8 +15,8 @@ class Crawler():
         soup = BeautifulSoup(self.page, "html.parser")
         self.save_found_weburls(soup)
         self.webpage_title = self.find_webpage_title(soup)
-        self.webpage_description = self.find_webpage_description(soup)
-        self.webpage_keywords = soup.find("meta", {"name":"keywords"})['content']
+        self.webpage_description = self.find_webpage_metadata(soup, 'description')
+        self.webpage_keywords = self.find_webpage_metadata(soup, 'keywords')
         self.translator.write_urls_and_content(self.url, self.webpage_title, self.webpage_description, self.webpage_keywords)
 
     def save_found_weburls(self, soup):
@@ -31,11 +31,17 @@ class Crawler():
         else:
             return soup.title.string
 
-    def find_webpage_description(self, soup):
+    def find_webpage_metadata(self, soup, name):
         try:
-            return soup.find("meta", {"name":"description"})['content']
+            return soup.find("meta", {"name": name})['content']
         except:
             return ''
+
+    # def find_webpage_keywords(self, soup):
+    #     try:
+    #         return soup.find("meta", {"name":"keywords"})['content']
+    #     except:
+    #         return ''
 
 # crawler = Crawler()
 # crawler.crawl("file:///Users/vicky/Programmes/beetlecrawler/spec/website/test.html")
