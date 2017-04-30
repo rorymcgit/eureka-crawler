@@ -77,3 +77,12 @@ class TestingTranslator(unittest.TestCase):
         self.assertEqual(self.translator.check_url_domain('https://www.example.co.uk/'), True)
         self.assertEqual(self.translator.check_url_domain('https://www.example.org/'), True)
         self.assertEqual(self.translator.check_url_domain('https://www.example.cz/'), False)
+
+    def test_find_nth_finds_nth_character_in_string(self):
+        find_nth_example = self.translator.find_nth('https://www.example.com/home/page', '/', 3)
+        self.assertEqual(find_nth_example, 28)
+
+    def test_cut_string_cuts_url_at_fourth_forward_slash(self):
+        self.translator.find_nth = MagicMock(return_value = 28)
+        url_to_cut = self.translator.cut_string('https://www.example.com/home/page')
+        self.assertEqual(url_to_cut, 'https://www.example.com/home')

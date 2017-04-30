@@ -38,5 +38,12 @@ class Translator():
     def check_url_domain(self, url):
         return '.co.uk' in url or '.com' in url or '.org' in url
 
-    # def cut url
-    #find nth & then url[:to nth]
+    def find_nth(self, haystack, needle, n):
+        parts = haystack.split(needle, n+1)
+        if len(parts)<=n+1:
+            return -1
+        return len(haystack)-len(parts[-1])-len(needle)
+
+    def cut_string(self, url):
+        string_cut = self.find_nth(url, '/', 3)
+        return url[:string_cut]
