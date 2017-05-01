@@ -35,10 +35,8 @@ class Crawler():
             return self.translator.full_database_message()
 
     def find_webpage_title(self, soup):
-        if soup.title == None:
-            return ''
-        else:
-            return soup.title.string
+        return soup.title.string if soup.title else ''
+
 
     def find_webpage_metadata(self, soup, name):
         try:
