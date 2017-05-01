@@ -32,7 +32,7 @@ class Crawler():
             self.crawl(next_url_to_crawl)
             self.return_all_content()
         else:
-            return self.translator.database_full_message()
+            return self.translator.full_database_message()
 
     def find_webpage_title(self, soup):
         if soup.title == None:
