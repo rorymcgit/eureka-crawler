@@ -47,6 +47,6 @@ class Crawler():
             return ''
 
 
-# crawler = Crawler()
+crawler = Crawler()
 # crawler.crawl("http://www.makersacademy.com")
 # crawler.return_all_content()

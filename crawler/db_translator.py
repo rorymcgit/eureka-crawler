@@ -2,13 +2,13 @@ import sqlalchemy
 from sqlalchemy import create_engine, select, insert, MetaData, Table
 
 class Translator():
-    def __init__(self, db = 'postgresql://localhost/beetle_crawler_development'):
+    def __init__(self, db = 'postgresql://localhost/beetle_crawler_development', database_limit = 1000):
         self.database_engine = create_engine(db)
         self.connection = self.database_engine.connect()
         metadata = MetaData()
         self.weburls = Table('weburls', metadata, autoload = True, autoload_with = self.database_engine)
         self.weburlsandcontent = Table('weburlsandcontent', metadata, autoload = True, autoload_with = self.database_engine)
-        self.database_limit = 1000
+        self.database_limit = database_limit
         self.current_id = 1
 
     def write_url(self, url):
@@ -27,7 +27,7 @@ class Translator():
             if self.get_weburls_table_size() < self.database_limit:
                 self.write_url(url)
             else:
-                raise Exception
+                return "Weburls table is full"
 
     def get_weburls_table_size(self):
         select_all = select([self.weburls])
@@ -58,7 +58,7 @@ class Translator():
 
     def full_database_message(self):
         return "The database is full."
-        
+
     def cut_string(self, url):
         if url.count('/') >= 4:
             string_cut = self.find_nth(url, '/', 3)
