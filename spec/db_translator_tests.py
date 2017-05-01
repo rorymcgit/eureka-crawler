@@ -19,17 +19,16 @@ class TestingTranslator(unittest.TestCase):
         self.translator.connection.execute(delete_weburl_and_content_table)
         self.translator.connection.close()
 
-    # def test_check_url_not_in_weburls(self):
-    #     self.translator.write_url('http://notsavedtwice.com')
-    #     stmt = select([self.translator.weburls]).where(self.translator.weburls.c.weburl == 'http://notsavedtwice.com')
-    #     print(self.test_database_connection.execute(stmt).fetchone()['weburl'])
-    #     self.translator.write_url('http://notsavedtwice.com')
-    #     statement = select([self.translator.weburls])
-    #     results = self.test_database_connection.execute(statement)
-    #     print(results)
-    #     self.assertIn('http://notsavedtwice.com', results.fetchall())
+    def test_check_url_not_in_weburls(self):
+        test_url = 'http://notsavedtwice.com'
+        self.translator.write_url(test_url)
+        self.translator.write_url(test_url)
+        select_statement = self.translator.weburls.select(self.translator.weburls.c.weburl == test_url)
+        result_proxy = self.test_database_connection.execute(select_statement)
+        results = [item[1] for item in result_proxy.fetchall()]
+        self.assertEqual(len(results), 1)
 
-    #
+
     # def test_translator_initializes_with_a_database_limit_of_1000(self):
     #     self.assertEqual(self.translator.database_limit, 1000)
     #

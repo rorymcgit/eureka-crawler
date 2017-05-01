@@ -1,22 +1,25 @@
 import sqlalchemy
 from sqlalchemy import create_engine, select, insert, MetaData, Table
+from sqlalchemy.orm import sessionmaker
+
 
 class Translator():
     def __init__(self, db = 'postgresql://localhost/beetle_crawler_development', database_limit = 1000):
-        self.database_engine = create_engine(db)
-        self.connection = self.database_engine.connect()
+        database_engine = create_engine(db)
+        self.connection = database_engine.connect()
         metadata = MetaData()
-        self.weburls = Table('weburls', metadata, autoload = True, autoload_with = self.database_engine)
-        self.weburlsandcontent = Table('weburlsandcontent', metadata, autoload = True, autoload_with = self.database_engine)
+        self.weburls = Table('weburls', metadata, autoload = True, autoload_with = database_engine)
+        self.weburlsandcontent = Table('weburlsandcontent', metadata, autoload = True, autoload_with = database_engine)
         self.database_limit = database_limit
         self.current_id = 1
 
     def write_url(self, url):
         if self.get_weburls_table_size() < self.database_limit:
             if self.url_checker(url):
-                url = self.cut_string(url)
-                statement = insert(self.weburls).values(weburl = url)
-                self.connection.execute(statement)
+                if not self.url_in_database(url):
+                    url = self.cut_string(url)
+                    statement = insert(self.weburls).values(weburl = url)
+                    self.connection.execute(statement)
         else:
             return "Weburls table is full"
 
@@ -40,6 +43,15 @@ class Translator():
     def get_next_url(self):
         next_url = select([self.weburls]).where(self.weburls.c.id == self.current_id)
         return self.connection.execute(next_url).fetchone()['weburl']
+
+    def url_in_database(self, url):
+        select_statement = self.weburls.select(self.weburls.c.weburl == url)
+        results = self.connection.execute(select_statement).fetchall()
+        results = [item[1] for item in results]
+        if len(results) > 0:
+            return True
+        else:
+            return False
 
     def url_checker(self, url):
         return self.check_url_beginning(url) and self.check_url_domain(url)
