@@ -118,7 +118,7 @@ class TestingTranslator(unittest.TestCase):
         self.assertEqual(self.translator.check_url_domain('https://www.example.org/'), True)
         self.assertEqual(self.translator.check_url_domain('https://www.example.cz/'), False)
 
-    def test_check_url_not_in_weburls(self):
+    def test_write_url_WONT_save_duplicate_urls(self):
         test_url = 'http://notsavedtwice.com'
         self.translator.write_url(test_url)
         self.translator.write_url(test_url)
@@ -126,6 +126,13 @@ class TestingTranslator(unittest.TestCase):
         result_proxy = self.test_database_connection.execute(select_statement)
         results = [item[1] for item in result_proxy.fetchall()]
         self.assertEqual(len(results), 1)
+
+
+    def test_write_url_calls_url_is_in_database(self):
+        self.translator.url_is_in_database = MagicMock()
+        test_url = 'http://www.checkmydb.com'
+        self.translator.write_url(test_url)
+        self.translator.url_is_in_database.assert_called_once()
 
 
     def test_find_nth_finds_nth_character_in_string(self):

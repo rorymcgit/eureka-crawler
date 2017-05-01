@@ -17,7 +17,7 @@ class Translator():
         if self.get_weburls_table_size() < self.database_limit:
             if self.url_checker(url):
                 url = self.cut_string(url)
-                if not self.url_in_database(url):
+                if not self.url_is_in_database(url):
                     statement = insert(self.weburls).values(weburl = url)
                     self.connection.execute(statement)
         else:
@@ -44,7 +44,7 @@ class Translator():
         next_url = select([self.weburls]).where(self.weburls.c.id == self.current_id)
         return self.connection.execute(next_url).fetchone()['weburl']
 
-    def url_in_database(self, url):
+    def url_is_in_database(self, url):
         select_statement = self.weburls.select(self.weburls.c.weburl == url)
         res_proxy = self.connection.execute(select_statement)
         results = [item[1] for item in res_proxy.fetchall()]

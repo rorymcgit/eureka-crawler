@@ -81,7 +81,8 @@ class TestingCrawler(unittest.TestCase):
     def test_crawl_next_url_will_not_crawl_when_both_tables_are_full(self):
         self.translator.get_weburls_table_size = MagicMock(return_value=10)
         self.translator.get_weburls_and_content_table_size = MagicMock(return_value=10)
-        self.translator.full_database_message.assert_called_once
+        self.crawler.crawl_next_url()
+        self.translator.full_database_message.assert_called_once()
 
 
     def test_find_webpage_title_returns_webpage_title(self):
