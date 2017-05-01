@@ -24,10 +24,11 @@ class Translator():
 
     def prepare_urls_for_writing_to_db(self, weburls):
         for url in weburls:
-            if self.get_weburls_table_size() < 1000:
+            if self.get_weburls_table_size() < self.database_limit:
                 self.write_url(url)
             else:
-                raise Exception
+                return 'weburls is now full'
+                # raise Exception
 
     def get_weburls_table_size(self):
         select_all = select([self.weburls])
@@ -62,4 +63,3 @@ class Translator():
             return url[:string_cut]
         else:
             return url
-
