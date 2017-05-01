@@ -67,7 +67,6 @@ class TestingCrawler(unittest.TestCase):
     def test_find_webpage_title_returns_webpage_title(self):
         run_find_webpage = self.crawler.find_webpage_title(self.get_test_soup())
         self.assertEqual(run_find_webpage, 'Cats and Dogs')
-        # test for the none!
 
     def test_find_webpage_title_returns_empty_string_if_title_not_found(self):
         empty_soup = BeautifulSoup('', 'html.parser')
