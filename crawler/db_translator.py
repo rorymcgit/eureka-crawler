@@ -12,8 +12,6 @@ class Translator():
         self.current_id = 1
 
     def write_url(self, url):
-        # stmt = select([self.weburls]).where(self.weburls.c.weburl == url)
-        # self.connection.execute(stmt).fetchAll()
         if self.get_weburls_table_size() < self.database_limit:
             if self.url_checker(url):
                 url = self.cut_string(url)
