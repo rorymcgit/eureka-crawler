@@ -16,8 +16,8 @@ class Translator():
     def write_url(self, url):
         if self.get_weburls_table_size() < self.database_limit:
             if self.url_checker(url):
+                url = self.cut_string(url)
                 if not self.url_in_database(url):
-                    url = self.cut_string(url)
                     statement = insert(self.weburls).values(weburl = url)
                     self.connection.execute(statement)
         else:
@@ -26,7 +26,6 @@ class Translator():
     def write_urls_and_content(self, url, title, description, keywords):
         statement = insert(self.weburlsandcontent).values(weburl = url, title = title, description = description, keywords = keywords)
         self.connection.execute(statement)
-        self.current_id += 1
 
     def prepare_urls_for_writing_to_db(self, weburls):
         for url in weburls:
@@ -41,6 +40,7 @@ class Translator():
         return self.connection.execute(select_all).rowcount
 
     def get_next_url(self):
+        self.current_id += 1
         next_url = select([self.weburls]).where(self.weburls.c.id == self.current_id)
         return self.connection.execute(next_url).fetchone()['weburl']
 

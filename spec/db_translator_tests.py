@@ -68,8 +68,10 @@ class TestingTranslator(unittest.TestCase):
         self.assertIn('example keywords', results.fetchone()['keywords'])
 
 
-    def test_write_urls_and_content_increases_current_id_by_1(self):
-        self.translator.write_urls_and_content('http://example.com', 'example title', 'example description', 'example keywords')
+    def test_get_next_url_increases_current_id_by_1(self):
+        self.translator.write_url('http://getnexturl_test.com')
+        self.translator.write_url('http://getnexturl_test2.com')
+        self.translator.get_next_url()
         self.assertEqual(self.translator.current_id, 2)
 
 

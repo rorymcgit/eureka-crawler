@@ -1,6 +1,6 @@
 import urllib.request
 from bs4 import BeautifulSoup
-from db_translator import Translator
+from crawler.db_translator import Translator
 
 class Crawler():
     def __init__(self, translator = Translator()):
@@ -8,14 +8,11 @@ class Crawler():
 
     def crawl(self, url):
         self.url = url
-        self.opened_url = urllib.request.urlopen(url)
-        # self.status_code = self.opened_url.getcode()
-        self.page = self.opened_url.read()
-        self.translator.write_url(url)
-
-    # def status_code_ok(self, status_code):
-    #     return status_code == 200
-
+        try:
+            self.page = urllib.request.urlopen(url).read()
+            self.translator.write_url(url)
+        except:
+            self.crawl_next_url()
 
     def return_all_content(self):
         soup = BeautifulSoup(self.page, "html.parser")
@@ -51,6 +48,6 @@ class Crawler():
             return ''
 
 
-crawler = Crawler()
-crawler.crawl("http://www.makersacademy.com")
-crawler.return_all_content()
+# crawler = Crawler()
+# crawler.crawl("http://www.makersacademy.com")
+# crawler.return_all_content()
