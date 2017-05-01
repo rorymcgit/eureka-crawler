@@ -51,13 +51,21 @@ class Translator():
         return len(results)
 
     def url_checker(self, url):
-        return self.check_url_beginning(url) and self.check_url_domain(url)
+        return self.check_url_beginning(url) and self.check_url_domain(url) and not self.is_low_quality_link(url)
 
     def check_url_beginning(self, url):
-        return url.startswith( 'http' )
+        return url.startswith('http')
 
     def check_url_domain(self, url):
         return '.co.uk' in url or '.com' in url or '.org' in url
+
+    def is_low_quality_link(self, url):
+        low_qual_links = ['facebook.com', 'plus.google.com', 'twitter.com', 'apple.com', 'instagram.com']
+        for i in low_qual_links:
+            if i in url:
+                return True
+            else:
+                return False
 
     def find_nth(self, haystack, needle, n):
         parts = haystack.split(needle, n+1)
