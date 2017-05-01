@@ -42,8 +42,9 @@ class TestingCrawler(unittest.TestCase):
     #     self.crawler.status_code = 404
     #     print(self.crawler.status_code)
 
-    # def test_status_code_ok(self):
-        # self.crawler.status_code_ok()
+    def test_status_code_ok(self):
+        self.assertTrue(self.crawler.status_code_ok(200))
+
 
 
     def test_return_all_content_assigns_title(self):
