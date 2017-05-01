@@ -47,6 +47,11 @@ class TestingCrawler(unittest.TestCase):
         self.crawler.return_all_content()
         self.translator.write_urls_and_content.assert_called_once_with(self.local_html_file, "Cats and Dogs", "Page about cats and dogs", "cats,dogs")
 
+    def test_return_all_content_calls_crawl_next_url(self):
+        self.crawler.crawl_next_url = MagicMock()
+        self.crawler.return_all_content()
+        self.crawler.crawl_next_url.assert_called_once()
+
 
     def test_save_found_weburls_saves_all_urls_from_webpage_in_an_array(self):
         test_soup = BeautifulSoup('<!DOCTYPE html>\n<html>\n\n<head>\n <title>Cats and Dogs</title>\n</head><body><a href="www.dogs.com">Dogs</a><a href="www.cats.com">Cats</a></body></html>', 'html.parser')

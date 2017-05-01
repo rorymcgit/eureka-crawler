@@ -18,7 +18,7 @@ class Crawler():
         self.webpage_description = soup.find("meta", {"name":"description"})['content']
         self.webpage_keywords = soup.find("meta", {"name":"keywords"})['content']
         self.translator.write_urls_and_content(self.url, self.webpage_title, self.webpage_description, self.webpage_keywords)
-        self.crawl_next_url
+        self.crawl_next_url()
 
     def save_found_weburls(self, soup):
         self.webpage_urls = []
