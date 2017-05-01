@@ -29,12 +29,10 @@ class Crawler():
     def crawl_next_url(self):
         next_url_to_crawl = self.translator.get_next_url()
         if self.translator.get_weburls_table_size() < self.translator.database_limit or self.translator.get_weburls_and_content_table_size() < self.translator.database_limit:
-            keep_crawling = True
-        else:
-            keep_crawling = False
-        while keep_crawling == True:
             self.crawl(next_url_to_crawl)
             self.return_all_content()
+        else:
+            return self.translator.database_full_message()
 
     def find_webpage_title(self, soup):
         if soup.title == None:
@@ -49,6 +47,6 @@ class Crawler():
             return ''
 
 
-crawler = Crawler()
-crawler.crawl("http://www.makersacademy.com")
-crawler.return_all_content()
+# crawler = Crawler()
+# crawler.crawl("http://www.makersacademy.com")
+# crawler.return_all_content()

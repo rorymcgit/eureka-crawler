@@ -27,8 +27,7 @@ class Translator():
             if self.get_weburls_table_size() < self.database_limit:
                 self.write_url(url)
             else:
-                return 'weburls is now full'
-                # raise Exception
+                raise Exception
 
     def get_weburls_table_size(self):
         select_all = select([self.weburls])
@@ -57,6 +56,9 @@ class Translator():
             return -1
         return len(haystack)-len(parts[-1])-len(needle)
 
+    def full_database_message(self):
+        return "The database is full."
+        
     def cut_string(self, url):
         if url.count('/') >= 4:
             string_cut = self.find_nth(url, '/', 3)
