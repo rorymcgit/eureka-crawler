@@ -15,12 +15,9 @@ class Crawler():
             self.crawl_next_url()
 
     def return_all_content(self):
-        soup = BeautifulSoup(self.page, "html.parser")
+        soup = BeautifulSoup(self.page, "html.parser", from_encoding="UTF-8")
         self.save_found_weburls(soup)
         self.webpage_title = self.find_webpage_title(soup)
-        # print(self.webpage_title)
-        # print(self.url)
-        # print("\n")
         self.webpage_description = self.find_webpage_metadata(soup, 'description')
         self.webpage_keywords = self.find_webpage_metadata(soup, 'keywords')
         self.translator.write_urls_and_content(self.url, self.webpage_title, self.webpage_description, self.webpage_keywords)
