@@ -12,7 +12,6 @@ class TestingCrawler(unittest.TestCase):
         self.crawler = Crawler(self.translator)
         self.local_index_html_file = "file://" + (os.path.abspath("spec/website/index.html"))
         self.crawler.crawl(self.local_index_html_file)
-        # self.local_test_html_file = "file://" + (os.path.abspath("spec/website/test.html"))
 
     def get_test_soup(self):
         test_soup = BeautifulSoup('<!DOCTYPE html>\n<html>\n\n<head>\n <title>Cats and Dogs</title> \n<meta name="description" content="Page about cats and dogs"> \n <meta name="keywords" content="cats,dogs">\n</head><body><a href="www.dogs.com">Dogs</a><a href="www.cats.com">Cats</a></body></html>', 'html.parser')
