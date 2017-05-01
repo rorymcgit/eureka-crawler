@@ -34,6 +34,7 @@ class Crawler():
             return 'The databases are full'
         while keep_crawling == True:
             self.crawl(next_url_to_crawl)
+            self.return_all_content()
 
 # crawler = Crawler()
 # crawler.crawl('https://www.webpagetest.org/')
