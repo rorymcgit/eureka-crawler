@@ -61,11 +61,7 @@ class Translator():
 
     def is_low_quality_link(self, url):
         low_qual_links = ['facebook.com', 'plus.google.com', 'twitter.com', 'apple.com', 'instagram.com']
-        for i in low_qual_links:
-            if i in url:
-                return True
-            else:
-                return False
+        return True if any(bad_link in url for bad_link in low_qual_links) else False
 
     def find_nth(self, haystack, needle, n):
         parts = haystack.split(needle, n+1)
