@@ -19,16 +19,6 @@ class TestingTranslator(unittest.TestCase):
         self.translator.connection.execute(delete_weburl_and_content_table)
         self.translator.connection.close()
 
-    def test_check_url_not_in_weburls(self):
-        test_url = 'http://notsavedtwice.com'
-        self.translator.write_url(test_url)
-        self.translator.write_url(test_url)
-        select_statement = self.translator.weburls.select(self.translator.weburls.c.weburl == test_url)
-        result_proxy = self.test_database_connection.execute(select_statement)
-        results = [item[1] for item in result_proxy.fetchall()]
-        self.assertEqual(len(results), 1)
-
-
     def test_translator_initializes_with_a_database_limit_of_1000(self):
         self.assertEqual(self.translator.database_limit, 1000)
 
@@ -125,6 +115,15 @@ class TestingTranslator(unittest.TestCase):
         self.assertEqual(self.translator.check_url_domain('https://www.example.co.uk/'), True)
         self.assertEqual(self.translator.check_url_domain('https://www.example.org/'), True)
         self.assertEqual(self.translator.check_url_domain('https://www.example.cz/'), False)
+
+    def test_check_url_not_in_weburls(self):
+        test_url = 'http://notsavedtwice.com'
+        self.translator.write_url(test_url)
+        self.translator.write_url(test_url)
+        select_statement = self.translator.weburls.select(self.translator.weburls.c.weburl == test_url)
+        result_proxy = self.test_database_connection.execute(select_statement)
+        results = [item[1] for item in result_proxy.fetchall()]
+        self.assertEqual(len(results), 1)
 
 
     def test_find_nth_finds_nth_character_in_string(self):

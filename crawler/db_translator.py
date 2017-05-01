@@ -48,7 +48,7 @@ class Translator():
         select_statement = self.weburls.select(self.weburls.c.weburl == url)
         res_proxy = self.connection.execute(select_statement)
         results = [item[1] for item in res_proxy.fetchall()]
-        return True if len(results) > 0 else False
+        return len(results)
 
     def url_checker(self, url):
         return self.check_url_beginning(url) and self.check_url_domain(url)
