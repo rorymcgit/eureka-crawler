@@ -12,10 +12,15 @@ class Translator():
         self.current_id = 1
 
     def write_url(self, url):
-        if self.url_checker(url):
-            url = self.cut_string(url)
-            statement = insert(self.weburls).values(weburl = url)
-            self.connection.execute(statement)
+        # stmt = select([self.weburls]).where(self.weburls.c.weburl == url)
+        # self.connection.execute(stmt).fetchAll()
+        if self.get_weburls_table_size() < self.database_limit:
+            if self.url_checker(url):
+                url = self.cut_string(url)
+                statement = insert(self.weburls).values(weburl = url)
+                self.connection.execute(statement)
+        else:
+            return "Weburls table is full"
 
     def write_urls_and_content(self, url, title, description, keywords):
         statement = insert(self.weburlsandcontent).values(weburl = url, title = title, description = description, keywords = keywords)
@@ -24,10 +29,7 @@ class Translator():
 
     def prepare_urls_for_writing_to_db(self, weburls):
         for url in weburls:
-            if self.get_weburls_table_size() < self.database_limit:
-                self.write_url(url)
-            else:
-                return "Weburls table is full"
+            self.write_url(url)
 
     def get_weburls_table_size(self):
         select_all = select([self.weburls])
@@ -38,8 +40,8 @@ class Translator():
         return self.connection.execute(select_all).rowcount
 
     def get_next_url(self):
-        my_url = select([self.weburls]).where(self.weburls.c.id == self.current_id)
-        return self.connection.execute(my_url).fetchone()['weburl']
+        next_url = select([self.weburls]).where(self.weburls.c.id == self.current_id)
+        return self.connection.execute(next_url).fetchone()['weburl']
 
     def url_checker(self, url):
         return self.check_url_beginning(url) and self.check_url_domain(url)

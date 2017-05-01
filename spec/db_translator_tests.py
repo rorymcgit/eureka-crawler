@@ -34,8 +34,8 @@ class TestingTranslator(unittest.TestCase):
         self.assertEqual(self.translator.current_id, 1)
 
     def test_translator_changeable_database_limit(self):
-        self.translator = Translator('postgresql://localhost/beetle_crawler_test', 35)
-        self.assertEqual(self.translator.database_limit, 35)
+        self.low_limit_translator = Translator('postgresql://localhost/beetle_crawler_test', 35)
+        self.assertEqual(self.low_limit_translator.database_limit, 35)
 
 
     def test_prepare_urls_for_writing_to_db_calls_write_url(self):
@@ -44,17 +44,16 @@ class TestingTranslator(unittest.TestCase):
         self.translator.prepare_urls_for_writing_to_db(retrieved_weburls)
         self.assertEqual(self.translator.write_url.call_count, 2)
 
-    def test_prepare_urls_for_writing_to_db_WONT_exceed_database_limit(self):
-        self.translator.get_weburls_table_size = MagicMock(return_value=1000)
-        returned_from_prep_urls = self.translator.prepare_urls_for_writing_to_db(['www.somecats.com'])
-        self.assertEqual(returned_from_prep_urls, "Weburls table is full")
 
-
-    def test_write_urls_saves_urls_to_database(self):
-        self.translator.write_url('http://translator2test.com')
+    def test_write_url_saves_urls_to_database(self):
+        self.translator.write_url('http://translatortest.com')
         statement = select([self.translator.weburls])
         results = self.test_database_connection.execute(statement)
-        self.assertIn('http://translator2test.com', results.fetchone()['weburl'])
+        self.assertIn('http://translatortest.com', results.fetchone()['weburl'])
+
+    def test_write_url_WONT_save_url_when_weburls_is_full(self):
+        self.translator.get_weburls_table_size = MagicMock(return_value=1000)
+        self.assertEqual(self.translator.write_url('http://translator2test.com'), "Weburls table is full")
 
 
     def test_write_urls_and_content_saves_everything_to_database(self):
