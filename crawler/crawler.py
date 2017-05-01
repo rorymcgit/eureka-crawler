@@ -8,7 +8,9 @@ class Crawler():
 
     def crawl(self, url):
         self.url = url
-        self.page = urllib.request.urlopen(url).read()
+        self.opened_url = urllib.request.urlopen(url)
+        self.status_code = self.opened_url.getcode()
+        self.page = self.opened_url.read()
         self.translator.write_url(url)
 
     def return_all_content(self):

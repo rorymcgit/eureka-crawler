@@ -14,7 +14,7 @@ class TestingCrawler(unittest.TestCase):
         self.translator.get_next_url = MagicMock(return_value='http://www.exampletest.com')
         self.translator.database_limit = 10
         self.crawler = Crawler(self.translator)
-        self.local_index_html_file = "file://" + (os.path.abspath("spec/website/index.html"))
+        self.local_index_html_file = "file://" + os.path.abspath("spec/website/index.html")
         self.crawler.crawl(self.local_index_html_file)
 
     def get_test_soup(self):
@@ -24,6 +24,11 @@ class TestingCrawler(unittest.TestCase):
     def test_crawler_is_instance_of_Crawler(self):
         self.assertIsInstance(self.crawler, Crawler)
 
+    # bad test because testing live website's status code!
+    # def test_crawler_has_a_status_code(self):
+    #     self.crawler.crawl('http://www.example.com')
+    #     self.assertEqual(self.crawler.status_code, 200)
+
     def test_crawl_calls_translator_write_url(self):
         self.translator.write_url = MagicMock()
         self.crawler.crawl(self.local_index_html_file)
@@ -31,6 +36,14 @@ class TestingCrawler(unittest.TestCase):
 
     def test_crawl_accepts_and_assigns_url(self):
         self.assertEqual(self.crawler.url, self.local_index_html_file)
+
+    # def test_crawl_status_code(self):
+    #     self.crawler.crawl(self.local_index_html_file)
+    #     self.crawler.status_code = 404
+    #     print(self.crawler.status_code)
+
+    # def test_status_code_ok(self):
+        # self.crawler.status_code_ok()
 
 
     def test_return_all_content_assigns_title(self):
