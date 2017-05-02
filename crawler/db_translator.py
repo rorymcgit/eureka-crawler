@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 
 
 class Translator():
-    def __init__(self, db = 'postgresql://localhost/beetle_crawler_development', database_limit = 100):
+    def __init__(self, db = 'postgresql://localhost/beetle_crawler_development', database_limit = 1000):
         database_engine = create_engine(db)
         self.connection = database_engine.connect()
         metadata = MetaData()
@@ -44,9 +44,9 @@ class Translator():
 
     def get_next_url(self):
         self.current_id += 1
-        next_url = select([self.weburls]).where(self.weburls.c.id == self.current_id)
+        next_url_statement = select([self.weburls]).where(self.weburls.c.id == self.current_id)
         try:
-            return self.connection.execute(next_url).fetchone()['weburl']
+            return self.connection.execute(next_url_statement).fetchone()['weburl']
         except:
             print(self.end_of_db_message())
 
