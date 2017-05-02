@@ -14,7 +14,7 @@ class TestingCrawler(unittest.TestCase):
         self.translator.get_next_url = MagicMock(return_value='http://www.exampletest.com')
         self.translator.database_limit = 10
         self.crawler = Crawler(self.translator)
-        self.local_index_html_file = "file://" + (os.path.abspath("spec/website/index.html"))
+        self.local_index_html_file = "file://" + os.path.abspath("spec/website/index.html")
         self.crawler.crawl(self.local_index_html_file)
 
     def get_test_soup(self):
@@ -71,7 +71,7 @@ class TestingCrawler(unittest.TestCase):
         self.crawler.save_found_weburls(self.get_test_soup())
         test_title = self.get_test_soup().title.string
         self.assertNotIn(test_title, self.crawler.webpage_urls)
-        
+
 
     def test_crawl_next_url_calls_translator_get_next_url(self):
         self.translator.get_next_url = MagicMock()
@@ -79,9 +79,9 @@ class TestingCrawler(unittest.TestCase):
         self.translator.get_next_url.assert_called_once()
 
     def test_crawl_next_url_will_not_crawl_when_both_tables_are_full(self):
-        self.translator.get_weburls_table_size = MagicMock(return_value=1000)
-        self.translator.get_weburls_and_content_table_size = MagicMock(return_value=1000)
-        self.assertEqual(self.crawler.crawl_next_url(), 'The databases are full')
+        self.translator.get_weburls_table_size = MagicMock(return_value=10)
+        self.translator.get_weburls_and_content_table_size = MagicMock(return_value=10)
+        self.translator.full_database_message.assert_called_once
 
 
     def test_find_webpage_title_returns_webpage_title(self):
@@ -110,4 +110,3 @@ class TestingCrawler(unittest.TestCase):
         empty_soup = BeautifulSoup('', 'html.parser')
         run_find_webpage = self.crawler.find_webpage_metadata(empty_soup, 'keywords')
         self.assertEqual(run_find_webpage, '')
-

@@ -19,7 +19,6 @@ class TestingTranslator(unittest.TestCase):
         self.translator.connection.execute(delete_weburl_and_content_table)
         self.translator.connection.close()
 
-
     def test_translator_initializes_with_a_database_limit_of_1000(self):
         self.assertEqual(self.translator.database_limit, 1000)
 
@@ -33,6 +32,10 @@ class TestingTranslator(unittest.TestCase):
     def test_translator_initializes_with_id_variable_of_1(self):
         self.assertEqual(self.translator.current_id, 1)
 
+    def test_translator_changeable_database_limit(self):
+        self.low_limit_translator = Translator('postgresql://localhost/beetle_crawler_test', 35)
+        self.assertEqual(self.low_limit_translator.database_limit, 35)
+
 
     def test_prepare_urls_for_writing_to_db_calls_write_url(self):
         self.translator.write_url = MagicMock()
@@ -40,16 +43,16 @@ class TestingTranslator(unittest.TestCase):
         self.translator.prepare_urls_for_writing_to_db(retrieved_weburls)
         self.assertEqual(self.translator.write_url.call_count, 2)
 
-    def test_prepare_urls_for_writing_to_db_WONT_exceed_database_limit(self):
-        self.translator.get_weburls_table_size = MagicMock(return_value=1000)
-        self.assertRaises(Exception, self.translator.prepare_urls_for_writing_to_db, ['www.somecats.com'])
 
-
-    def test_write_urls_saves_urls_to_database(self):
-        self.translator.write_url('http://translator2test.com')
+    def test_write_url_saves_urls_to_database(self):
+        self.translator.write_url('http://translatortest.com')
         statement = select([self.translator.weburls])
         results = self.test_database_connection.execute(statement)
-        self.assertIn('http://translator2test.com', results.fetchone()['weburl'])
+        self.assertIn('http://translatortest.com', results.fetchone()['weburl'])
+
+    def test_write_url_WONT_save_url_when_weburls_is_full(self):
+        self.translator.get_weburls_table_size = MagicMock(return_value=1000)
+        self.assertEqual(self.translator.write_url('http://translator2test.com'), "Weburls table is full")
 
 
     def test_write_urls_and_content_saves_everything_to_database(self):
@@ -65,8 +68,10 @@ class TestingTranslator(unittest.TestCase):
         self.assertIn('example keywords', results.fetchone()['keywords'])
 
 
-    def test_write_urls_and_content_increases_current_id_by_1(self):
-        self.translator.write_urls_and_content('http://example.com', 'example title', 'example description', 'example keywords')
+    def test_get_next_url_increases_current_id_by_1(self):
+        self.translator.write_url('http://getnexturl_test.com')
+        self.translator.write_url('http://getnexturl_test2.com')
+        self.translator.get_next_url()
         self.assertEqual(self.translator.current_id, 2)
 
 
@@ -97,7 +102,7 @@ class TestingTranslator(unittest.TestCase):
         self.translator.write_urls_and_content('http://example.com', 'example title', 'example description', 'example keywords')
         self.assertEqual(self.translator.get_next_url(), 'https://www.dogs.com')
 
-        
+
     def test_url_checker_is_called_by_write_url(self):
         self.translator.url_checker = MagicMock()
         self.translator.write_url('https://www.example.com/')
@@ -113,12 +118,21 @@ class TestingTranslator(unittest.TestCase):
         self.assertEqual(self.translator.check_url_domain('https://www.example.org/'), True)
         self.assertEqual(self.translator.check_url_domain('https://www.example.cz/'), False)
 
-        
+    def test_check_url_not_in_weburls(self):
+        test_url = 'http://notsavedtwice.com'
+        self.translator.write_url(test_url)
+        self.translator.write_url(test_url)
+        select_statement = self.translator.weburls.select(self.translator.weburls.c.weburl == test_url)
+        result_proxy = self.test_database_connection.execute(select_statement)
+        results = [item[1] for item in result_proxy.fetchall()]
+        self.assertEqual(len(results), 1)
+
+
     def test_find_nth_finds_nth_character_in_string(self):
         find_nth_example = self.translator.find_nth('https://www.example.com/home/page', '/', 3)
         self.assertEqual(find_nth_example, 28)
 
-        
+
     def test_cut_string_cuts_url_at_fourth_forward_slash(self):
         self.translator.find_nth = MagicMock(return_value = 28)
         url_to_cut = self.translator.cut_string('https://www.example.com/home/page')
