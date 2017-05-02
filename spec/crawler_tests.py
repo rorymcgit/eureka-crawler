@@ -85,6 +85,13 @@ class TestingCrawler(unittest.TestCase):
         self.crawler.crawl_next_url()
         self.translator.full_database_message.assert_called()
 
+    # def test_skip_to_next_url_if_metadata_blank(self):
+    #     self.webpage_title = self.find_webpage_title(soup)
+    #     self.webpage_description = self.find_webpage_metadata(soup, 'description')
+    #     self.webpage_keywords = self.find_webpage_metadata(soup, 'keywords')
+
+
+
 
     def test_find_webpage_title_returns_webpage_title(self):
         run_find_webpage = self.crawler.find_webpage_title(self.get_test_soup())
