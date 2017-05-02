@@ -24,8 +24,17 @@ class Crawler():
         self.webpage_title = self.find_webpage_title(soup)
         self.webpage_description = self.find_webpage_metadata(soup, 'description')
         self.webpage_keywords = self.find_webpage_metadata(soup, 'keywords')
-        self.translator.write_urls_and_content(self.url, self.webpage_title, self.webpage_description, self.webpage_keywords)
-        self.crawl_next_url()
+        # print(self.webpage_title)
+        # print(self.webpage_description)
+        # print(self.webpage_keywords)
+        if self.empty_titles_and_descriptions(self.webpage_title, self.webpage_description):
+            self.crawl_next_url()
+        else:
+            self.translator.write_urls_and_content(self.url, self.webpage_title, self.webpage_description, self.webpage_keywords)
+            self.crawl_next_url()
+
+    def empty_titles_and_descriptions(self, title, description):
+        return title == "" and description == ""
 
     def save_found_weburls(self, soup):
         self.webpage_urls = []
@@ -35,10 +44,12 @@ class Crawler():
 
     def crawl_next_url(self):
         next_url_to_crawl = self.translator.get_next_url()
+        # print("NEXT URL TO CRAWL: ", next_url_to_crawl)
         if self.translator.both_tables_are_not_full_yet():
-            self.crawl(next_url_to_crawl)
+            if next_url_to_crawl != None:
+                self.crawl(next_url_to_crawl)
         else:
-            return self.translator.full_database_message()
+            print(self.translator.full_database_message())
 
     def find_webpage_title(self, soup):
         return soup.title.string if soup.title else ''
