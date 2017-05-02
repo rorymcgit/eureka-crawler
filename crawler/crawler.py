@@ -24,16 +24,14 @@ class Crawler():
         self.webpage_title = self.find_webpage_title(soup)
         self.webpage_description = self.find_webpage_metadata(soup, 'description')
         self.webpage_keywords = self.find_webpage_metadata(soup, 'keywords')
-        # score = 0
-        # if len(self.webpage_title) > 0:
-        #     score = 2
-        # if len(self.webpage_description) > 0:
-        #     score += 2
-        # if len(self.webpage_keywords) > 0:
-        #     score += 1
-        # if score <= 1 self.crawl_next_url():
-        self.translator.write_urls_and_content(self.url, self.webpage_title, self.webpage_description, self.webpage_keywords)
-        self.crawl_next_url()
+        if self.empty_titles_and_descriptions(self.webpage_title, self.webpage_description):
+            self.crawl_next_url()
+        else:
+            self.translator.write_urls_and_content(self.url, self.webpage_title, self.webpage_description, self.webpage_keywords)
+            self.crawl_next_url()
+
+    def empty_titles_and_descriptions(self, title, description):
+        return title == "" and description == ""
 
     def save_found_weburls(self, soup):
         self.webpage_urls = []

@@ -12,7 +12,7 @@ class TestingCrawler(unittest.TestCase):
         self.translator.get_weburls_table_size = MagicMock(return_value=50)
         self.translator.get_weburls_and_content_table_size = MagicMock(return_value=10)
         self.translator.get_next_url = MagicMock(return_value='http://www.exampletest.com')
-        self.translator.both_tables_are_not_full_yet = MagicMock(return_value=True)
+        self.translator.both_tables_are_not_full_yet = MagicMock(return_value=False)
         self.translator.database_limit = 10
         self.crawler = Crawler(self.translator)
         self.local_index_html_file = "file://" + os.path.abspath("spec/website/index.html")
@@ -85,12 +85,15 @@ class TestingCrawler(unittest.TestCase):
         self.crawler.crawl_next_url()
         self.translator.full_database_message.assert_called()
 
-    # def test_skip_to_next_url_if_metadata_blank(self):
-    #     self.webpage_title = self.find_webpage_title(soup)
-    #     self.webpage_description = self.find_webpage_metadata(soup, 'description')
-    #     self.webpage_keywords = self.find_webpage_metadata(soup, 'keywords')
+    def test_empty_titles_and_descriptions_returns_true(self):
+        title = ""
+        description = ""
+        self.assertTrue(self.crawler.empty_titles_and_descriptions(title, description))
 
-
+    def test_empty_titles_and_descriptions_returns_false(self):
+        title = "The best website ever"
+        description = "This is clearly the best website, you want to visit it"
+        self.assertFalse(self.crawler.empty_titles_and_descriptions(title, description))
 
 
     def test_find_webpage_title_returns_webpage_title(self):
