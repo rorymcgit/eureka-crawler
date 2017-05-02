@@ -39,6 +39,9 @@ class Translator():
         select_all = select([self.weburlsandcontent])
         return self.connection.execute(select_all).rowcount
 
+    def both_tables_are_not_full_yet(self):
+        return self.get_weburls_table_size() < self.database_limit or self.get_weburls_and_content_table_size() < self.database_limit
+
     def get_next_url(self):
         self.current_id += 1
         next_url = select([self.weburls]).where(self.weburls.c.id == self.current_id)
@@ -60,8 +63,8 @@ class Translator():
         return '.co.uk' in url or '.com' in url or '.org' in url
 
     def is_low_quality_link(self, url):
-        low_qual_links = ['facebook.com', 'plus.google.com', 'twitter.com', 'apple.com', 'instagram.com']
-        return True if any(bad_link in url for bad_link in low_qual_links) else False
+        low_quality_links = ['plus.google.com', 'accounts.google.com', 'facebook.com', 'twitter.com', 'apple.com', 'instagram.com', 'download-sha1', 'download.mozilla', 'donate.mozilla', 'bugzilla']
+        return True if any(bad_link in url for bad_link in low_quality_links) else False
 
     def find_nth(self, haystack, needle, n):
         parts = haystack.split(needle, n+1)
