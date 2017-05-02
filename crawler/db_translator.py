@@ -17,7 +17,7 @@ class Translator():
         if self.get_weburls_table_size() < self.database_limit:
             if self.url_checker(url):
                 url = self.cut_string(url)
-                if not self.url_in_database(url):
+                if not self.url_is_in_database(url):
                     statement = insert(self.weburls).values(weburl = url)
                     self.connection.execute(statement)
         else:
@@ -39,25 +39,32 @@ class Translator():
         select_all = select([self.weburlsandcontent])
         return self.connection.execute(select_all).rowcount
 
+    def both_tables_are_not_full_yet(self):
+        return self.get_weburls_table_size() < self.database_limit or self.get_weburls_and_content_table_size() < self.database_limit
+
     def get_next_url(self):
         self.current_id += 1
         next_url = select([self.weburls]).where(self.weburls.c.id == self.current_id)
         return self.connection.execute(next_url).fetchone()['weburl']
 
-    def url_in_database(self, url):
+    def url_is_in_database(self, url):
         select_statement = self.weburls.select(self.weburls.c.weburl == url)
         res_proxy = self.connection.execute(select_statement)
         results = [item[1] for item in res_proxy.fetchall()]
         return len(results)
 
     def url_checker(self, url):
-        return self.check_url_beginning(url) and self.check_url_domain(url)
+        return self.check_url_beginning(url) and self.check_url_domain(url) and not self.is_low_quality_link(url)
 
     def check_url_beginning(self, url):
-        return url.startswith( 'http' )
+        return url.startswith('http')
 
     def check_url_domain(self, url):
         return '.co.uk' in url or '.com' in url or '.org' in url
+
+    def is_low_quality_link(self, url):
+        low_quality_links = ['plus.google.com', 'accounts.google.com', 'facebook.com', 'twitter.com', 'apple.com', 'instagram.com', 'download-sha1', 'download.mozilla', 'donate.mozilla', 'bugzilla']
+        return True if any(bad_link in url for bad_link in low_quality_links) else False
 
     def find_nth(self, haystack, needle, n):
         parts = haystack.split(needle, n+1)
