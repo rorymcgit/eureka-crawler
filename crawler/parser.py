@@ -21,7 +21,7 @@ class Parser():
     def find_webpage_metadata(self, soup, name):
         try:
             return soup.find("meta", {"name": name})['content']
-        except:
+        except TypeError:
             return ''
 
     def empty_titles_and_descriptions(self, title, description):

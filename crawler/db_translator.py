@@ -51,7 +51,7 @@ class Translator():
         next_url_statement = select([self.weburls]).where(self.weburls.c.id == self.current_id)
         try:
             return self.connection.execute(next_url_statement).fetchone()['weburl']
-        except:
+        except TypeError:
             print(self.end_of_db_message())
 
     def url_is_in_database(self, url):
