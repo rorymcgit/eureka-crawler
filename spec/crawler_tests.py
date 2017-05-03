@@ -36,10 +36,9 @@ class TestingCrawler(unittest.TestCase):
 
 
     def test_return_all_content_calls_translator_write_urls_and_content(self):
-        self.translator.write_urls_and_content = MagicMock()
-        test_page_metadata = {'url': self.local_index_html_file, 'title': 'Cats and Dogs', 'description': 'Page about cats and dogs', 'keywords': 'cats,dogs'}
+        self.crawler.translator.write_urls_and_content = MagicMock()
         self.crawler.return_all_content()
-        self.translator.write_urls_and_content.assert_called_once_with(test_page_metadata)
+        self.crawler.translator.write_urls_and_content.assert_called_once()
 
     def test_return_all_content_calls_crawl_next_url(self):
         self.crawler.crawl_next_url = MagicMock()
