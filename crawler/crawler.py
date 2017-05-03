@@ -24,9 +24,6 @@ class Crawler():
         self.webpage_title = self.find_webpage_title(soup)
         self.webpage_description = self.find_webpage_metadata(soup, 'description')
         self.webpage_keywords = self.find_webpage_metadata(soup, 'keywords')
-        # print(self.webpage_title)
-        # print(self.webpage_description)
-        # print(self.webpage_keywords)
         if self.empty_titles_and_descriptions(self.webpage_title, self.webpage_description):
             self.crawl_next_url()
         else:
@@ -49,7 +46,7 @@ class Crawler():
             if next_url_to_crawl != None:
                 self.crawl(next_url_to_crawl)
         else:
-            print(self.translator.full_database_message())
+            return self.translator.full_database_message()
 
     def find_webpage_title(self, soup):
         return soup.title.string if soup.title else ''
