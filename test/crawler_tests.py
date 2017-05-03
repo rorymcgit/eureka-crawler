@@ -16,7 +16,7 @@ class TestingCrawler(unittest.TestCase):
         self.translator.both_tables_are_not_full_yet = MagicMock(return_value=False)
         self.translator.database_limit = 10
         self.crawler = Crawler(self.translator, self.parser)
-        self.local_index_html_file = "file://" + os.path.abspath("spec/website/index.html")
+        self.local_index_html_file = "file://" + os.path.abspath("test/website/index.html")
         self.crawler.crawl(self.local_index_html_file)
 
     def get_test_soup(self):

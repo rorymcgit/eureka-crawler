@@ -1,12 +1,9 @@
 import urllib.request
-import sys
-import os
-from crawler.db_translator import Translator
+from crawler.translator import Translator
 from crawler.parser import Parser
 
 class Crawler():
     def __init__(self, translator = Translator(), parser = Parser()):
-        sys.setrecursionlimit(10000)
         self.translator = translator
         self.parser = parser
 
@@ -26,9 +23,7 @@ class Crawler():
         if page_metadata_dictionary:
             page_metadata_dictionary["url"] = self.url
             self.translator.write_urls_and_content(page_metadata_dictionary)
-            self.crawl_next_url()
-        else:
-            self.crawl_next_url()
+        self.crawl_next_url()
 
     def save_found_weburls(self):
         webpage_links = self.parser.create_soup_and_save_weburls(self.page)
@@ -39,9 +34,3 @@ class Crawler():
         # print("NEXT URL TO CRAWL: ", next_url_to_crawl)
         if next_url_to_crawl:
             self.crawl(next_url_to_crawl)
-
-
-# sites_to_crawl = "file://" + os.path.abspath("no_content.html")
-
-# crawler = Crawler()
-# crawler.crawl("http://www.makersacademy.com")
