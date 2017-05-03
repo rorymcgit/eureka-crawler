@@ -3,9 +3,9 @@ import sqlalchemy
 import mock
 from mock import MagicMock
 from sqlalchemy import create_engine, select, insert, MetaData, Table, delete
-from crawler.translator import Translator
+from crawler.database_reader import DatabaseReader
 
-class TestingTranslatorInitialize(unittest.TestCase):
+class TestingDatabaseReader(unittest.TestCase):
 
     def setUp(self):
         self.url_checker = MagicMock()
