@@ -10,10 +10,13 @@ class TestingDatabaseWriter(unittest.TestCase):
     def setUp(self):
         self.url_checker = MagicMock()
         self.url_splicer = MagicMock()
+        self.database_reader = MagicMock()
+        self.database_reader.get_weburls_table_size = MagicMock(return_value = 0)
         self.database_writer = DatabaseWriter('postgresql://localhost/beetle_crawler_test',
                                                 1000,
                                                 self.url_checker,
-                                                self.url_splicer)
+                                                self.url_splicer,
+                                                self.database_reader)
         self.test_database_connection = self.database_writer.connection
         self.test_metadata_dictionary = {'url': 'http://example.com',
                                         'title': 'example title',
@@ -55,8 +58,7 @@ class TestingDatabaseWriter(unittest.TestCase):
 
 
     def test_write_url_WONT_save_url_when_weburls_is_full(self):
-        # READER METHOD TO MOCK
-        self.database_writer.database_reader.get_weburls_table_size = MagicMock(return_value=1000)
+        self.database_reader.get_weburls_table_size = MagicMock(return_value=1000)
         self.assertEqual(self.database_writer.write_url('http://database_writer2test.com'), "Weburls table is full")
 
 
@@ -73,15 +75,13 @@ class TestingDatabaseWriter(unittest.TestCase):
         self.assertIn('example keywords', results.fetchone()['keywords'])
 
     def test_write_url_calls_cut_url(self):
-        self.database_writer.database_reader.get_weburls_table_size = MagicMock(return_value = 0)
         self.database_writer.url_splicer.cut_url = MagicMock(return_value='https://www.example.com/home/')
         self.database_writer.write_url('https://www.example.com/home/page')
         self.database_writer.url_splicer.cut_url.assert_called_once_with('https://www.example.com/home/page')
 
     def test_write_url_saves_urls_to_database(self):
-        self.database_writer.database_reader.get_weburls_table_size = MagicMock(return_value = 0)
         self.database_writer.url_splicer.cut_url = MagicMock(return_value = 'http://database_writertest.com')
-        self.database_writer.database_reader.url_is_in_database = MagicMock(return_value = False)
+        self.database_reader.url_is_in_database = MagicMock(return_value = False)
         self.database_writer.write_url('http://database_writertest.com')
         statement = select([self.database_writer.weburls])
         results = self.test_database_connection.execute(statement)
@@ -89,14 +89,14 @@ class TestingDatabaseWriter(unittest.TestCase):
 
     def test_write_url_WONT_save_duplicate_urls_when_url_is_in_database(self):
         test_url = 'http://alreadyindb.com'
-        self.database_writer.database_reader.url_is_in_database = MagicMock(return_value = True)
+        self.database_reader.url_is_in_database = MagicMock(return_value = True)
         self.database_writer.write_url(test_url)
         select_statement = self.database_writer.weburls.select(self.database_writer.weburls.c.weburl == test_url)
         result_proxy = self.test_database_connection.execute(select_statement)
         self.assertEqual(len(result_proxy.fetchall()), 0)
 
     def test_write_url_calls_url_is_in_database(self):
-        self.database_writer.database_reader.url_is_in_database = MagicMock()
+        self.database_reader.url_is_in_database = MagicMock()
         test_url = 'http://www.checkmydb.com'
         self.database_writer.write_url(test_url)
-        self.database_writer.database_reader.url_is_in_database.assert_called_once()
+        self.database_reader.url_is_in_database.assert_called_once()

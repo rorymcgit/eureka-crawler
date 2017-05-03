@@ -26,15 +26,10 @@ class DatabaseWriter():
         self.weburlsandcontent = Table('weburlsandcontent', metadata, autoload = True, autoload_with = database_engine)
 
     def write_url(self, url):
-        print(1)
         if self.database_reader.get_weburls_table_size() < self.database_limit:
-            print(2)
             if self.url_checker.url_is_valid(url):
-                print(3)
                 url = self.url_splicer.cut_url(url)
-                print(4)
                 if not self.database_reader.url_is_in_database(url):
-                    print(5)
                     statement = insert(self.weburls).values(weburl = url)
                     self.connection.execute(statement)
 
