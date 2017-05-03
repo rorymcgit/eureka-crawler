@@ -36,7 +36,7 @@ class Crawler():
             self.crawl_next_url()
 
     def save_found_weburls(self, soup):
-        #parser.soup_weburls(self.page)= returns an array
+        #parser.parse_webpages_links(self.page)= returns an array
         self.webpage_urls = []
         for link in soup.find_all('a', href=True):
             self.webpage_urls.append(link['href'])

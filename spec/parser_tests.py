@@ -71,7 +71,6 @@ class TestingParser(unittest.TestCase):
 
 
     def test_parse_webpages_links_returns_an_array(self):
-        self.soupify_page = MagicMock(return_value = self.test_soup)
-        run_parse_webpages_links = self.parser.parse_webpages_links()
+        run_parse_webpages_links = self.parser.parse_webpages_links(self.test_soup)
         self.assertIn("www.dogs.com", run_parse_webpages_links)
         self.assertIn("www.cats.com", run_parse_webpages_links)
