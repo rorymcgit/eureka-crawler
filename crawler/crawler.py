@@ -17,8 +17,8 @@ class Crawler():
             self.page = urllib.request.urlopen(url).read()
             self.translator.write_url(url)
             self.return_all_content()
-        except urllib2.HTTPError, err:
-            print(err.code)
+        except urllib.error.HTTPError as e:
+            print(e.code)
             self.crawl_next_url()
 
     def return_all_content(self):
