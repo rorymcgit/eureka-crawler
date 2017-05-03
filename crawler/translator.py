@@ -1,21 +1,22 @@
 import sqlalchemy
 from sqlalchemy import create_engine, select, insert, MetaData, Table
 from sqlalchemy.orm import sessionmaker
-
+from crawler.url_checker import URLChecker
 
 class Translator():
-    def __init__(self, db = 'postgresql://localhost/beetle_crawler_development', database_limit = 1000):
+    def __init__(self, db = 'postgresql://localhost/beetle_crawler_development', database_limit = 1000, url_checker = URLChecker()):
         database_engine = create_engine(db)
         self.connection = database_engine.connect()
         metadata = MetaData()
         self.weburls = Table('weburls', metadata, autoload = True, autoload_with = database_engine)
         self.weburlsandcontent = Table('weburlsandcontent', metadata, autoload = True, autoload_with = database_engine)
+        self.url_checker = url_checker
         self.database_limit = database_limit
         self.current_id = 1
 
     def write_url(self, url):
         if self.get_weburls_table_size() < self.database_limit:
-            if self.url_is_valid(url):
+            if self.url_checker.url_is_valid(url):
                 url = self.cut_string(url)
                 if not self.url_is_in_database(url):
                     statement = insert(self.weburls).values(weburl = url)
@@ -56,7 +57,7 @@ class Translator():
         res_proxy = self.connection.execute(select_statement)
         results = [item[1] for item in res_proxy.fetchall()]
         return len(results)
-
+# # # # # # # # # # # # #
     def url_is_valid(self, url):
         return self.check_url_beginning(url) and self.check_url_domain(url) and not self.is_low_quality_link(url)
 
@@ -69,7 +70,7 @@ class Translator():
     def is_low_quality_link(self, url):
         low_quality_links = ['plus.google.com', 'accounts.google.com', 'facebook.com', 'twitter.com', 'apple.com', 'instagram.com', 'download-sha1', 'download.mozilla', 'donate.mozilla', 'bugzilla']
         return True if any(bad_link in url for bad_link in low_quality_links) else False
-
+# # # # # # # # # # # # #
     def find_nth(self, haystack, needle, n):
         parts = haystack.split(needle, n+1)
         if len(parts) <= n+1:
@@ -82,6 +83,6 @@ class Translator():
             return url[:string_cut]
         else:
             return url
-
+# # # # # # # # # # # # #
     def end_of_db_message(self):
         return "No more web urls to crawl in the table."
