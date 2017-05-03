@@ -1,7 +1,6 @@
 import urllib.request
 import sys
 import os
-from bs4 import BeautifulSoup
 from crawler.db_translator import Translator
 from crawler.parser import Parser
 
@@ -22,7 +21,6 @@ class Crawler():
             self.crawl_next_url()
 
     def return_all_content(self):
-        soup = BeautifulSoup(self.page, "html.parser", from_encoding="UTF-8")
         self.save_found_weburls()
         page_metadata_dictionary = self.parser.create_soup_and_save_content(self.page)
         if page_metadata_dictionary:

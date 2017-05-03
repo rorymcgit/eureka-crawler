@@ -107,16 +107,16 @@ class TestingTranslator(unittest.TestCase):
         self.assertEqual(self.translator.get_next_url(), 'https://www.dogs.com')
 
 
-    def test_url_checker_is_called_by_write_url(self):
-        self.translator.url_checker = MagicMock()
+    def test_url_is_valid_is_called_by_write_url(self):
+        self.translator.url_is_valid = MagicMock()
         self.translator.write_url('https://www.example.com/')
-        self.translator.url_checker.assert_called_once_with('https://www.example.com/')
+        self.translator.url_is_valid.assert_called_once_with('https://www.example.com/')
 
-    def test_url_checker_saves_only_urls_beginning_http(self):
+    def test_url_is_valid_saves_only_urls_beginning_http(self):
         self.assertEqual(self.translator.check_url_beginning('https://www.example.com/'), True)
         self.assertEqual(self.translator.check_url_beginning('www.example.com/'), False)
 
-    def test_url_checker_saves_only_urls_ending_com_or_uk(self):
+    def test_url_is_valid_saves_only_urls_ending_com_or_uk(self):
         self.assertEqual(self.translator.check_url_domain('https://www.example.com/'), True)
         self.assertEqual(self.translator.check_url_domain('https://www.example.co.uk/'), True)
         self.assertEqual(self.translator.check_url_domain('https://www.example.org/'), True)
