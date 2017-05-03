@@ -21,6 +21,7 @@ class Crawler():
     def return_all_content(self):
         soup = BeautifulSoup(self.page, "html.parser", from_encoding="UTF-8")
         self.save_found_weburls(soup)
+        # self.parser.create_soup_and_save_content(self.page)
         self.webpage_title = self.find_webpage_title(soup)
         self.webpage_description = self.find_webpage_metadata(soup, 'description')
         self.webpage_keywords = self.find_webpage_metadata(soup, 'keywords')

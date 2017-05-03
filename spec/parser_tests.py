@@ -12,14 +12,26 @@ class TestingParser(unittest.TestCase):
         self.test_soup = BeautifulSoup('<!DOCTYPE html>\n<html>\n\n<head>\n <title>Cats and Dogs</title> \n<meta name="description" content="Page about cats and dogs"> \n <meta name="keywords" content="cats,dogs">\n</head><body><a href="www.dogs.com">Dogs</a><a href="www.cats.com">Cats</a></body></html>', 'html.parser')
         self.bad_test_soup = BeautifulSoup('<!DOCTYPE html>\n<html>', 'html.parser')
 
-
     def test_parser_is_instance_of_Parser(self):
         self.assertIsInstance(self.parser, Parser)
 
+    def test_parse_webpage_content_returns_dictionary(self):
+        run_parse_webpage_content = self.parser.parse_webpage_content(self.test_soup)
+        self.assertEqual(run_parse_webpage_content, {"title": "Cats and Dogs", "description": "Page about cats and dogs", "keywords": "cats,dogs"})
+
+    def test_parse_webpage_content_returns_empty_dictionary_if_values_are_empty(self):
+        run_parse_webpage_content = self.parser.parse_webpage_content(self.bad_test_soup)
+        self.assertEqual(run_parse_webpage_content, {})
+        
     def test_parse_webpage_content(self):
         self.parser.find_webpage_title = MagicMock()
         self.parser.parse_webpage_content(self.test_soup)
         self.parser.find_webpage_title.assert_called_once_with(self.test_soup)
+
+    def test_parse_webpage_content_calls_webpage_metadata_description(self):
+        self.parser.find_webpage_metadata = MagicMock(return_value = "keywords")
+        self.parser.parse_webpage_content(self.test_soup)
+        self.parser.find_webpage_metadata.assert_called_with(self.test_soup, 'keywords')
 
     def test_find_webpage_title_return_title(self):
         run_find_webpage_title = self.parser.find_webpage_title(self.test_soup)
@@ -44,3 +56,14 @@ class TestingParser(unittest.TestCase):
     def test_find_webpage_metadata_returns_empty_string_when_no_keywords(self):
         run_find_webpage_metadata = self.parser.find_webpage_metadata(self.bad_test_soup, 'keywords')
         self.assertEqual(run_find_webpage_metadata, '')
+
+
+    def test_empty_titles_and_descriptions_returns_true(self):
+        title = ''
+        description = ''
+        self.assertTrue(self.parser.empty_titles_and_descriptions(title, description))
+
+    def test_empty_titles_and_descriptions_returns_false(self):
+        title = "The best website ever"
+        description = "This is clearly the best website, you want to visit it"
+        self.assertFalse(self.parser.empty_titles_and_descriptions(title, description))
