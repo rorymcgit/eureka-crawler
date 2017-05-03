@@ -43,9 +43,6 @@ class Translator():
         select_all = select([self.weburlsandcontent])
         return self.connection.execute(select_all).rowcount
 
-    def both_tables_are_not_full_yet(self):
-        return self.get_weburls_table_size() < self.database_limit or self.get_weburls_and_content_table_size() < self.database_limit
-
     def get_next_url(self):
         self.current_id += 1
         next_url_statement = select([self.weburls]).where(self.weburls.c.id == self.current_id)
@@ -81,9 +78,6 @@ class Translator():
 
     def end_of_db_message(self):
         return "No more web urls to crawl in the table."
-
-    def full_database_message(self):
-        return "The database is full."
 
     def cut_string(self, url):
         if url.count('/') >= 4:

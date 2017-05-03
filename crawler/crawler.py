@@ -22,8 +22,11 @@ class Crawler():
             self.crawl_next_url()
 
     def return_all_content(self):
+        #crawler.save_found_weburls(page)
+        #soup page and delegate to translator
         soup = BeautifulSoup(self.page, "html.parser", from_encoding="UTF-8")
         self.save_found_weburls(soup)
+        #self.save_found_weburls()
         page_metadata_dictionary = self.parser.create_soup_and_save_content(self.page)
         if page_metadata_dictionary:
             page_metadata_dictionary["url"] = self.url
@@ -33,6 +36,7 @@ class Crawler():
             self.crawl_next_url()
 
     def save_found_weburls(self, soup):
+        #parser.soup_weburls(self.page)= returns an array
         self.webpage_urls = []
         for link in soup.find_all('a', href=True):
             self.webpage_urls.append(link['href'])
@@ -41,11 +45,8 @@ class Crawler():
     def crawl_next_url(self):
         next_url_to_crawl = self.translator.get_next_url()
         # print("NEXT URL TO CRAWL: ", next_url_to_crawl)
-        if self.translator.both_tables_are_not_full_yet():
-            if next_url_to_crawl != None:
-                self.crawl(next_url_to_crawl)
-        else:
-            return self.translator.full_database_message()
+        if next_url_to_crawl:
+            self.crawl(next_url_to_crawl)
 
 
 # sites_to_crawl = "file://" + os.path.abspath("no_content.html")
