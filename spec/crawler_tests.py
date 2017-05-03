@@ -52,16 +52,11 @@ class TestingCrawler(unittest.TestCase):
         self.crawler.return_all_content()
         self.parser.create_soup_and_save_content.assert_called_once()
 
-    def test_save_found_weburls_saves_all_urls_from_webpage_in_an_array(self):
-        self.crawler.save_found_weburls(self.get_test_soup())
-        self.assertIn("www.dogs.com", self.crawler.webpage_urls)
-        self.assertIn("www.cats.com", self.crawler.webpage_urls)
-
     def test_save_found_weburls_calls_translator_prepare_urls_for_writing_to_db(self):
         self.translator.prepare_urls_for_writing_to_db = MagicMock()
-        self.crawler.save_found_weburls(self.get_test_soup())
+        self.crawler.save_found_weburls()
         test_urls_array = ["www.dogs.com", "www.cats.com"]
-        self.translator.prepare_urls_for_writing_to_db.assert_called_once_with(test_urls_array)
+        self.translator.prepare_urls_for_writing_to_db.assert_called_once()
 
     def test_crawl_next_url_calls_translator_get_next_url(self):
         self.crawler.crawl_next_url()

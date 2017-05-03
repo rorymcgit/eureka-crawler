@@ -22,11 +22,8 @@ class Crawler():
             self.crawl_next_url()
 
     def return_all_content(self):
-        #crawler.save_found_weburls(page)
-        #soup page and delegate to translator
         soup = BeautifulSoup(self.page, "html.parser", from_encoding="UTF-8")
-        self.save_found_weburls(soup)
-        #self.save_found_weburls()
+        self.save_found_weburls()
         page_metadata_dictionary = self.parser.create_soup_and_save_content(self.page)
         if page_metadata_dictionary:
             page_metadata_dictionary["url"] = self.url
@@ -35,12 +32,9 @@ class Crawler():
         else:
             self.crawl_next_url()
 
-    def save_found_weburls(self, soup):
-        #parser.parse_webpages_links(self.page)= returns an array
-        self.webpage_urls = []
-        for link in soup.find_all('a', href=True):
-            self.webpage_urls.append(link['href'])
-        self.translator.prepare_urls_for_writing_to_db(self.webpage_urls)
+    def save_found_weburls(self):
+        webpage_links = self.parser.create_soup_and_save_weburls(self.page)
+        self.translator.prepare_urls_for_writing_to_db(webpage_links)
 
     def crawl_next_url(self):
         next_url_to_crawl = self.translator.get_next_url()
