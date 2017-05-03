@@ -9,6 +9,7 @@ class TestingCrawler(unittest.TestCase):
 
     def setUp(self):
         self.translator = MagicMock()
+        self.parser = MagicMock()
         self.translator.get_weburls_table_size = MagicMock(return_value=50)
         self.translator.get_weburls_and_content_table_size = MagicMock(return_value=10)
         self.translator.get_next_url = MagicMock(return_value='http://www.exampletest.com')
@@ -45,6 +46,12 @@ class TestingCrawler(unittest.TestCase):
         self.crawler.return_all_content()
         self.crawler.crawl_next_url.assert_called_once()
 
+    def test_return_all_content_calls_parser_create_soup_and_save_content(self):
+        self.crawler.page = bytes()
+        self.crawler.save_found_weburls = MagicMock()
+        self.crawler.parser.create_soup_and_save_content = MagicMock()
+        self.crawler.return_all_content()
+        self.crawler.parser.create_soup_and_save_content.assert_called_once()
 
     def test_save_found_weburls_saves_all_urls_from_webpage_in_an_array(self):
         self.crawler.save_found_weburls(self.get_test_soup())
