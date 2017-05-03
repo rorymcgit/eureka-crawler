@@ -15,7 +15,7 @@ class Crawler():
         self.url = url
         try:
             self.page = urllib.request.urlopen(url).read()
-            # self.translator.write_url(url)
+            self.translator.write_url(url)
             self.return_all_content()
         except:
             self.crawl_next_url()
@@ -26,14 +26,10 @@ class Crawler():
         page_metadata_dictionary = self.parser.create_soup_and_save_content(self.page)
         if page_metadata_dictionary:
             page_metadata_dictionary["url"] = self.url
-            print(page_metadata_dictionary)
             self.translator.write_urls_and_content(page_metadata_dictionary)
-            # self.crawl_next_url()
+            self.crawl_next_url()
         else:
-            print('empty dictionary')
-            # self.crawl_next_url()
-
-
+            self.crawl_next_url()
 
     def empty_titles_and_descriptions(self, title, description):
         return title == "" and description == ""

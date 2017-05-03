@@ -54,9 +54,6 @@ class Translator():
         except:
             print(self.end_of_db_message())
 
-    def end_of_db_message(self):
-        return "No more web urls to crawl in the table."
-
     def url_is_in_database(self, url):
         select_statement = self.weburls.select(self.weburls.c.weburl == url)
         res_proxy = self.connection.execute(select_statement)
@@ -81,6 +78,9 @@ class Translator():
         if len(parts)<=n+1:
             return -1
         return len(haystack)-len(parts[-1])-len(needle)
+
+    def end_of_db_message(self):
+        return "No more web urls to crawl in the table."
 
     def full_database_message(self):
         return "The database is full."

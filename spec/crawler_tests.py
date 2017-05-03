@@ -34,22 +34,11 @@ class TestingCrawler(unittest.TestCase):
         self.assertEqual(self.crawler.url, self.local_index_html_file)
 
 
-    def test_return_all_content_assigns_title(self):
-        self.crawler.return_all_content()
-        self.assertIn("Cats and Dogs", self.crawler.webpage_title)
-
-    def test_return_all_content_assigns_description(self):
-        self.crawler.return_all_content()
-        self.assertIn("Page about cats and dogs", self.crawler.webpage_description)
-
-    def test_return_all_content_assigns_keywords(self):
-        self.crawler.return_all_content()
-        self.assertIn("cats,dogs", self.crawler.webpage_keywords)
-
     def test_return_all_content_calls_translator_write_urls_and_content(self):
         self.translator.write_urls_and_content = MagicMock()
+        test_page_metadata = {'url': self.local_index_html_file, 'title': 'Cats and Dogs', 'description': 'Page about cats and dogs', 'keywords': 'cats,dogs'}
         self.crawler.return_all_content()
-        self.translator.write_urls_and_content.assert_called_once_with(self.local_index_html_file, "Cats and Dogs", "Page about cats and dogs", "cats,dogs")
+        self.translator.write_urls_and_content.assert_called_once_with(test_page_metadata)
 
     def test_return_all_content_calls_crawl_next_url(self):
         self.crawler.crawl_next_url = MagicMock()

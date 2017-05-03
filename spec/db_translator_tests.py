@@ -10,6 +10,10 @@ class TestingTranslator(unittest.TestCase):
     def setUp(self):
         self.translator = Translator('postgresql://localhost/beetle_crawler_test')
         self.test_database_connection = self.translator.connection
+        self.test_metadata_dictionary = {'url':'http://example.com',
+                                        'title':'example title',
+                                        'description':'example description',
+                                        'keywords':'example keywords'}
 
     def tearDown(self):
         delete_weburl_table = delete(self.translator.weburls)
@@ -56,7 +60,7 @@ class TestingTranslator(unittest.TestCase):
 
 
     def test_write_urls_and_content_saves_everything_to_database(self):
-        self.translator.write_urls_and_content('http://example.com', 'example title', 'example description', 'example keywords')
+        self.translator.write_urls_and_content(self.test_metadata_dictionary)
         statement = select([self.translator.weburlsandcontent])
         results = self.test_database_connection.execute(statement)
         self.assertIn('http://example.com', results.fetchone()['weburl'])
@@ -87,8 +91,8 @@ class TestingTranslator(unittest.TestCase):
         self.assertEqual(self.translator.get_weburls_table_size(), 2)
 
     def test_get_weburls_and_content_table_size(self):
-        self.translator.write_urls_and_content('http://someexample.com', 'some example title', 'some example description', 'some example keywords')
-        self.translator.write_urls_and_content('http://example.com', 'another example title', 'another example description', 'another example keywords')
+        self.translator.write_urls_and_content(self.test_metadata_dictionary)
+        self.translator.write_urls_and_content(self.test_metadata_dictionary)
         self.assertEqual(self.translator.get_weburls_and_content_table_size(), 2)
 
 
@@ -99,7 +103,7 @@ class TestingTranslator(unittest.TestCase):
         self.translator.write_url('https://www.example1.com')
         test_weburls_array = ["https://www.dogs.com", "https://www.cats.com"]
         self.translator.prepare_urls_for_writing_to_db(test_weburls_array)
-        self.translator.write_urls_and_content('http://example.com', 'example title', 'example description', 'example keywords')
+        self.translator.write_urls_and_content(self.test_metadata_dictionary)
         self.assertEqual(self.translator.get_next_url(), 'https://www.dogs.com')
 
 
