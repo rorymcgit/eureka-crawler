@@ -31,9 +31,6 @@ class Crawler():
         else:
             self.crawl_next_url()
 
-    def empty_titles_and_descriptions(self, title, description):
-        return title == "" and description == ""
-
     def save_found_weburls(self, soup):
         self.webpage_urls = []
         for link in soup.find_all('a', href=True):
@@ -49,14 +46,6 @@ class Crawler():
         else:
             return self.translator.full_database_message()
 
-    def find_webpage_title(self, soup):
-        return soup.title.string if soup.title else ''
-
-    def find_webpage_metadata(self, soup, name):
-        try:
-            return soup.find("meta", {"name": name})['content']
-        except:
-            return ''
 
 # sites_to_crawl = "file://" + os.path.abspath("no_content.html")
 
