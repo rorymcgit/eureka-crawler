@@ -9,6 +9,7 @@ class TestingTranslator(unittest.TestCase):
 
     def setUp(self):
         self.url_checker = MagicMock()
+        self.url_splicer = MagicMock()
         self.translator = Translator('postgresql://localhost/beetle_crawler_test', 1000, self.url_checker)
         self.test_database_connection = self.translator.connection
         self.test_metadata_dictionary = {'url':'http://example.com',
@@ -81,9 +82,9 @@ class TestingTranslator(unittest.TestCase):
 
 
     def test_write_url_calls_cut_string(self):
-        self.translator.cut_string = MagicMock(return_value='https://www.example.com/home/')
+        self.translator.url_splicer.cut_string = MagicMock(return_value='https://www.example.com/home/')
         self.translator.write_url('https://www.example.com/home/page')
-        self.translator.cut_string.assert_called_once_with('https://www.example.com/home/page')
+        self.translator.url_splicer.cut_string.assert_called_once_with('https://www.example.com/home/page')
 
 
     def test_get_weburls_table_size(self):

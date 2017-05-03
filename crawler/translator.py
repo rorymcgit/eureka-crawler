@@ -2,22 +2,24 @@ import sqlalchemy
 from sqlalchemy import create_engine, select, insert, MetaData, Table
 from sqlalchemy.orm import sessionmaker
 from crawler.url_checker import URLChecker
+from crawler.url_splicer import URLSplicer
 
 class Translator():
-    def __init__(self, db = 'postgresql://localhost/beetle_crawler_development', database_limit = 1000, url_checker = URLChecker()):
+    def __init__(self, db = 'postgresql://localhost/beetle_crawler_development', database_limit = 1000, url_checker = URLChecker(), url_splicer = URLSplicer()):
         database_engine = create_engine(db)
         self.connection = database_engine.connect()
         metadata = MetaData()
         self.weburls = Table('weburls', metadata, autoload = True, autoload_with = database_engine)
         self.weburlsandcontent = Table('weburlsandcontent', metadata, autoload = True, autoload_with = database_engine)
         self.url_checker = url_checker
+        self.url_splicer = url_splicer
         self.database_limit = database_limit
         self.current_id = 1
 
     def write_url(self, url):
         if self.get_weburls_table_size() < self.database_limit:
             if self.url_checker.url_is_valid(url):
-                url = self.cut_string(url)
+                url = self.url_splicer.cut_string(url)
                 if not self.url_is_in_database(url):
                     statement = insert(self.weburls).values(weburl = url)
                     self.connection.execute(statement)
@@ -57,7 +59,7 @@ class Translator():
         res_proxy = self.connection.execute(select_statement)
         results = [item[1] for item in res_proxy.fetchall()]
         return len(results)
-
+# # # # # # # # # # # # #
     def find_nth(self, haystack, needle, n):
         parts = haystack.split(needle, n+1)
         if len(parts) <= n+1:

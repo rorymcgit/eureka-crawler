@@ -2,12 +2,12 @@
 class URLChecker:
 
     def url_is_valid(self, url):
-        return self.check_url_beginning(url) and self.check_url_domain(url) and not self.is_low_quality_link(url)
+        return self.url_is_http(url) and self.url_domain_is_good(url) and not self.is_low_quality_link(url)
 
-    def check_url_beginning(self, url):
+    def url_is_http(self, url):
         return url.startswith('http')
 
-    def check_url_domain(self, url):
+    def url_domain_is_good(self, url):
         return '.co.uk' in url or '.com' in url or '.org' in url
 
     def is_low_quality_link(self, url):
