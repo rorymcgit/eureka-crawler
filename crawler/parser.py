@@ -26,6 +26,3 @@ class Parser():
 
     def empty_titles_and_descriptions(self, title, description):
         return title == "" and description == ""
-
-
-# self.parser.create_soup_and_save_content(self.page)
