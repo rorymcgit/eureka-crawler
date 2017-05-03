@@ -19,7 +19,7 @@ class Translator():
     def write_url(self, url):
         if self.get_weburls_table_size() < self.database_limit:
             if self.url_checker.url_is_valid(url):
-                url = self.url_splicer.cut_string(url)
+                url = self.url_splicer.cut_url(url)
                 if not self.url_is_in_database(url):
                     statement = insert(self.weburls).values(weburl = url)
                     self.connection.execute(statement)
@@ -59,19 +59,6 @@ class Translator():
         res_proxy = self.connection.execute(select_statement)
         results = [item[1] for item in res_proxy.fetchall()]
         return len(results)
-# # # # # # # # # # # # #
-    def find_nth(self, haystack, needle, n):
-        parts = haystack.split(needle, n+1)
-        if len(parts) <= n+1:
-            return -1
-        return len(haystack)-len(parts[-1])-len(needle)
 
-    def cut_string(self, url):
-        if url.count('/') >= 4:
-            string_cut = self.find_nth(url, '/', 3)
-            return url[:string_cut]
-        else:
-            return url
-# # # # # # # # # # # # #
     def end_of_db_message(self):
         return "No more web urls to crawl in the table."

@@ -18,6 +18,7 @@ class TestingTranslator(unittest.TestCase):
                                         'keywords':'example keywords'}
 
     def tearDown(self):
+        self.translator.url_checker.url_is_valid.reset_mock()
         delete_weburl_table = delete(self.translator.weburls)
         delete_weburl_and_content_table = delete(self.translator.weburlsandcontent)
         self.translator.connection.execute('TRUNCATE TABLE weburls RESTART IDENTITY;')
@@ -81,10 +82,10 @@ class TestingTranslator(unittest.TestCase):
         self.assertEqual(self.translator.current_id, 2)
 
 
-    def test_write_url_calls_cut_string(self):
-        self.translator.url_splicer.cut_string = MagicMock(return_value='https://www.example.com/home/')
-        self.translator.write_url('https://www.example.com/home/page')
-        self.translator.url_splicer.cut_string.assert_called_once_with('https://www.example.com/home/page')
+    # def test_write_url_calls_cut_url(self):
+    #     self.translator.url_splicer.cut_url = MagicMock(return_value='https://www.example.com/home/')
+    #     self.translator.write_url('https://www.example.com/home/page')
+    #     self.translator.url_splicer.cut_url.assert_called_once_with('https://www.example.com/home/page')
 
 
     def test_get_weburls_table_size(self):
@@ -110,9 +111,9 @@ class TestingTranslator(unittest.TestCase):
 
 
     def test_url_is_valid_is_called_by_write_url(self):
-        self.url_checker.url_is_valid = MagicMock()
+        self.translator.url_checker.url_is_valid = MagicMock()
         self.translator.write_url('https://www.example.com/')
-        self.url_checker.url_is_valid.assert_called_once_with('https://www.example.com/')
+        self.translator.url_checker.url_is_valid.assert_called_once_with('https://www.example.com/')
 
     def test_write_url_WONT_save_duplicate_urls(self):
         test_url = 'http://notsavedtwice.com'
@@ -129,14 +130,3 @@ class TestingTranslator(unittest.TestCase):
         test_url = 'http://www.checkmydb.com'
         self.translator.write_url(test_url)
         self.translator.url_is_in_database.assert_called_once()
-
-
-    def test_find_nth_finds_nth_character_in_string(self):
-        find_nth_example = self.translator.find_nth('https://www.example.com/home/page', '/', 3)
-        self.assertEqual(find_nth_example, 28)
-
-
-    def test_cut_string_cuts_url_at_fourth_forward_slash(self):
-        self.translator.find_nth = MagicMock(return_value = 28)
-        url_to_cut = self.translator.cut_string('https://www.example.com/home/page')
-        self.assertEqual(url_to_cut, 'https://www.example.com/home')
