@@ -13,11 +13,11 @@ class Parser():
     def find_webpage_title(self, soup):
         return soup.title.string if soup.title else ''
 
-    # def find_webpage_metadata(self, soup, name):
-    #     try:
-    #         return soup.find("meta", {"name": name})['content']
-    #     except:
-    #         return ''
+    def find_webpage_metadata(self, soup, name):
+        try:
+            return soup.find("meta", {"name": name})['content']
+        except:
+            return ''
     #
     # def empty_titles_and_descriptions(self, title, description):
     #     return title == "" and description == ""
