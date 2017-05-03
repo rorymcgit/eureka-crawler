@@ -29,6 +29,9 @@ class TestingDatabaseReader(unittest.TestCase):
     def test_database_reader_is_instance_of_database_reader(self):
         self.assertIsInstance(self.database_reader, DatabaseReader)
 
+    def test_database_reader_initializes_with_current_id_variable_of_1(self):
+        self.assertEqual(self.database_reader.current_id, 1)
+
 
     def test_get_next_url_increases_current_id_by_1(self):
         self.insert_url_to_weburls_table('http://getnexturl_test.com')
