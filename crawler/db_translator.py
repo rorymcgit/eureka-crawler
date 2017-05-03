@@ -23,8 +23,12 @@ class Translator():
         else:
             return "Weburls table is full"
 
-    def write_urls_and_content(self, url, title, description, keywords):
-        statement = insert(self.weburlsandcontent).values(weburl = url, title = title, description = description, keywords = keywords)
+    def write_urls_and_content(self, page_metadata_dictionary):
+        statement = insert(self.weburlsandcontent).values(
+            weburl = page_metadata_dictionary['url'],
+            title = page_metadata_dictionary['title'],
+            description = page_metadata_dictionary['description'],
+            keywords = page_metadata_dictionary['keywords'])
         self.connection.execute(statement)
 
     def prepare_urls_for_writing_to_db(self, weburls):

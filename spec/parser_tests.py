@@ -22,7 +22,7 @@ class TestingParser(unittest.TestCase):
     def test_parse_webpage_content_returns_empty_dictionary_if_values_are_empty(self):
         run_parse_webpage_content = self.parser.parse_webpage_content(self.bad_test_soup)
         self.assertEqual(run_parse_webpage_content, {})
-        
+
     def test_parse_webpage_content(self):
         self.parser.find_webpage_title = MagicMock()
         self.parser.parse_webpage_content(self.test_soup)

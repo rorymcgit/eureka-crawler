@@ -1,8 +1,9 @@
 import urllib.request
 import sys
+import os
 from bs4 import BeautifulSoup
-from db_translator import Translator
-from parser import Parser
+from crawler.db_translator import Translator
+from crawler.parser import Parser
 
 class Crawler():
     def __init__(self, translator = Translator(), parser = Parser()):
@@ -26,21 +27,13 @@ class Crawler():
         if page_metadata_dictionary:
             page_metadata_dictionary["url"] = self.url
             print(page_metadata_dictionary)
-            # self.translator.write_urls_and_content(self.url, self.webpage_title, self.webpage_description, self.webpage_keywords)
+            self.translator.write_urls_and_content(page_metadata_dictionary)
             # self.crawl_next_url()
         else:
             print('empty dictionary')
             # self.crawl_next_url()
 
 
-        # self.webpage_title = self.find_webpage_title(soup)
-        # self.webpage_description = self.find_webpage_metadata(soup, 'description')
-        # self.webpage_keywords = self.find_webpage_metadata(soup, 'keywords')
-        # if self.empty_titles_and_descriptions(self.webpage_title, self.webpage_description):
-        #     self.crawl_next_url()
-        # else:
-        #     self.translator.write_urls_and_content(self.url, self.webpage_title, self.webpage_description, self.webpage_keywords)
-        #     self.crawl_next_url()
 
     def empty_titles_and_descriptions(self, title, description):
         return title == "" and description == ""
@@ -69,6 +62,7 @@ class Crawler():
         except:
             return ''
 
+# sites_to_crawl = "file://" + os.path.abspath("no_content.html")
 
-crawler = Crawler()
-crawler.crawl("http://www.makersacademy.com")
+# crawler = Crawler()
+# crawler.crawl(sites_to_crawl)
