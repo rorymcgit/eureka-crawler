@@ -8,3 +8,11 @@ Team:
 - [Nicholas Leacock](https://github.com/marudine)
 - [Vicky Ledsom](https://github.com/ledleds)
 - [Rory McGuinness](https://github.com/rorymcgit)
+
+## Installation
+
+To create your test and development databases and relevant tables:
+
+- Run ```./db-config.sh```
+- If you get an error regarding permissions, you'll need to run ```chmod +x db-config.sh```, then run the above again.
+
