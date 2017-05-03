@@ -15,10 +15,12 @@ class Parser():
         # print(webpage_title)
         webpage_description = self.find_webpage_metadata(soup, 'description')
         webpage_keywords = self.find_webpage_metadata(soup, 'keywords')
-        if self.empty_titles_and_descriptions(webpage_title, webpage_description):
+        if self.check_empty_titles_and_descriptions(webpage_title, webpage_description):
             return {}
         else:
-            return {"title": webpage_title, "description": webpage_description, "keywords": webpage_keywords}
+            return {"title": webpage_title,
+                    "description": webpage_description,
+                    "keywords": webpage_keywords}
 
     def parse_webpages_links(self, soup):
         webpage_urls = []
@@ -35,5 +37,5 @@ class Parser():
         except TypeError:
             return ''
 
-    def empty_titles_and_descriptions(self, title, description):
+    def check_empty_titles_and_descriptions(self, title, description):
         return title == "" and description == ""

@@ -26,6 +26,10 @@ class TestingTranslator(unittest.TestCase):
         self.translator.connection.execute(delete_weburl_and_content_table)
         self.translator.connection.close()
 
+    def test_translator_set_up_database(self):
+        self.assertIsInstance(self.translator.weburls, Table)
+        self.assertIsInstance(self.translator.weburlsandcontent, Table)
+
     def test_translator_initializes_with_a_database_limit_of_1000(self):
         self.assertEqual(self.translator.database_limit, 1000)
 

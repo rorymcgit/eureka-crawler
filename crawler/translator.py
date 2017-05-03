@@ -5,16 +5,23 @@ from crawler.url_checker import URLChecker
 from crawler.url_splicer import URLSplicer
 
 class Translator():
-    def __init__(self, db = 'postgresql://localhost/beetle_crawler_development', database_limit = 1000, url_checker = URLChecker(), url_splicer = URLSplicer()):
+    def __init__(self,
+                db = 'postgresql://localhost/beetle_crawler_development',
+                database_limit = 1000,
+                url_checker = URLChecker(),
+                url_splicer = URLSplicer()):
+        self.set_up_database(db)
+        self.url_checker = url_checker
+        self.url_splicer = url_splicer
+        self.database_limit = database_limit
+        self.current_id = 1
+
+    def set_up_database(self, db):
         database_engine = create_engine(db)
         self.connection = database_engine.connect()
         metadata = MetaData()
         self.weburls = Table('weburls', metadata, autoload = True, autoload_with = database_engine)
         self.weburlsandcontent = Table('weburlsandcontent', metadata, autoload = True, autoload_with = database_engine)
-        self.url_checker = url_checker
-        self.url_splicer = url_splicer
-        self.database_limit = database_limit
-        self.current_id = 1
 
     def write_url(self, url):
         if self.get_weburls_table_size() < self.database_limit:
