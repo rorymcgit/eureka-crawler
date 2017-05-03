@@ -139,11 +139,3 @@ class TestingTranslator(unittest.TestCase):
         self.translator.find_nth = MagicMock(return_value = 28)
         url_to_cut = self.translator.cut_string('https://www.example.com/home/page')
         self.assertEqual(url_to_cut, 'https://www.example.com/home')
-
-    def test_is_low_quality_link_returns_true_for_bad_link(self):
-        test_url = "https://l.facebook.com/l.php?u=http%3A%2F%2Fbit.ly%2F2oIOj1d&h=ATNX92Yjs558O-DYMPJ31lQUT97uPCPCfPwZ9vUu4i7-zLT3ACP-1k_LLp5TKMLE_ZwUrkTRFvWWu6Sqo3sRZc51wD7uKcTgIRN1gf3XlBB6xqHd35ZxeHg&enc=AZOWulTNzLIKwRbWMKuj53x6BMSr61jcGJ1tdCnCjorzT1BaIo7uV-x188113_h2g5B-HUdbKrFky3bAMnh5A21v6Egd6aJNRwfs-Q8Cq3zWkZbgMYyRt_cWdpQDxrR_oUHFEdyGUU6Zl1whDgL-SBgjJXuLDUbGGKKtHJJPJhUD83_RKYkMbXGuA7tNhqyp5jz8SdneOc5iqrqIQRXylGLP&s=1"
-        self.assertTrue(self.translator.is_low_quality_link(test_url))
-
-    def test_is_low_quality_link_returns_false_for_good_link(self):
-        test_url = "https://www.interestingwebsite.com/cool-article"
-        self.assertFalse(self.translator.is_low_quality_link(test_url))
