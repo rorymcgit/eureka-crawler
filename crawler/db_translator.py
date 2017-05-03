@@ -23,8 +23,12 @@ class Translator():
         else:
             return "Weburls table is full"
 
-    def write_urls_and_content(self, url, title, description, keywords):
-        statement = insert(self.weburlsandcontent).values(weburl = url, title = title, description = description, keywords = keywords)
+    def write_urls_and_content(self, page_metadata_dictionary):
+        statement = insert(self.weburlsandcontent).values(
+            weburl = page_metadata_dictionary['url'],
+            title = page_metadata_dictionary['title'],
+            description = page_metadata_dictionary['description'],
+            keywords = page_metadata_dictionary['keywords'])
         self.connection.execute(statement)
 
     def prepare_urls_for_writing_to_db(self, weburls):
@@ -47,11 +51,8 @@ class Translator():
         next_url_statement = select([self.weburls]).where(self.weburls.c.id == self.current_id)
         try:
             return self.connection.execute(next_url_statement).fetchone()['weburl']
-        except:
+        except TypeError:
             print(self.end_of_db_message())
-
-    def end_of_db_message(self):
-        return "No more web urls to crawl in the table."
 
     def url_is_in_database(self, url):
         select_statement = self.weburls.select(self.weburls.c.weburl == url)
@@ -77,6 +78,9 @@ class Translator():
         if len(parts)<=n+1:
             return -1
         return len(haystack)-len(parts[-1])-len(needle)
+
+    def end_of_db_message(self):
+        return "No more web urls to crawl in the table."
 
     def full_database_message(self):
         return "The database is full."

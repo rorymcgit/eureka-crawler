@@ -9,6 +9,7 @@ class TestingCrawler(unittest.TestCase):
 
     def setUp(self):
         self.translator = MagicMock()
+        self.parser = MagicMock()
         self.translator.get_weburls_table_size = MagicMock(return_value=50)
         self.translator.get_weburls_and_content_table_size = MagicMock(return_value=10)
         self.translator.get_next_url = MagicMock(return_value='http://www.exampletest.com')
@@ -34,28 +35,22 @@ class TestingCrawler(unittest.TestCase):
         self.assertEqual(self.crawler.url, self.local_index_html_file)
 
 
-    def test_return_all_content_assigns_title(self):
-        self.crawler.return_all_content()
-        self.assertIn("Cats and Dogs", self.crawler.webpage_title)
-
-    def test_return_all_content_assigns_description(self):
-        self.crawler.return_all_content()
-        self.assertIn("Page about cats and dogs", self.crawler.webpage_description)
-
-    def test_return_all_content_assigns_keywords(self):
-        self.crawler.return_all_content()
-        self.assertIn("cats,dogs", self.crawler.webpage_keywords)
-
     def test_return_all_content_calls_translator_write_urls_and_content(self):
-        self.translator.write_urls_and_content = MagicMock()
+        self.crawler.translator.write_urls_and_content = MagicMock()
         self.crawler.return_all_content()
-        self.translator.write_urls_and_content.assert_called_once_with(self.local_index_html_file, "Cats and Dogs", "Page about cats and dogs", "cats,dogs")
+        self.crawler.translator.write_urls_and_content.assert_called_once()
 
     def test_return_all_content_calls_crawl_next_url(self):
         self.crawler.crawl_next_url = MagicMock()
         self.crawler.return_all_content()
         self.crawler.crawl_next_url.assert_called_once()
 
+    def test_return_all_content_calls_parser_create_soup_and_save_content(self):
+        self.crawler.page = bytes()
+        self.crawler.save_found_weburls = MagicMock()
+        self.crawler.parser.create_soup_and_save_content = MagicMock()
+        self.crawler.return_all_content()
+        self.crawler.parser.create_soup_and_save_content.assert_called_once()
 
     def test_save_found_weburls_saves_all_urls_from_webpage_in_an_array(self):
         self.crawler.save_found_weburls(self.get_test_soup())
@@ -84,41 +79,3 @@ class TestingCrawler(unittest.TestCase):
         self.translator.get_weburls_and_content_table_size = MagicMock(return_value=10)
         self.crawler.crawl_next_url()
         self.translator.full_database_message.assert_called()
-
-    def test_empty_titles_and_descriptions_returns_true(self):
-        title = ""
-        description = ""
-        self.assertTrue(self.crawler.empty_titles_and_descriptions(title, description))
-
-    def test_empty_titles_and_descriptions_returns_false(self):
-        title = "The best website ever"
-        description = "This is clearly the best website, you want to visit it"
-        self.assertFalse(self.crawler.empty_titles_and_descriptions(title, description))
-
-
-    def test_find_webpage_title_returns_webpage_title(self):
-        run_find_webpage = self.crawler.find_webpage_title(self.get_test_soup())
-        self.assertEqual(run_find_webpage, 'Cats and Dogs')
-
-    def test_find_webpage_title_returns_empty_string_if_title_not_found(self):
-        empty_soup = BeautifulSoup('', 'html.parser')
-        run_find_webpage = self.crawler.find_webpage_title(empty_soup)
-        self.assertEqual(run_find_webpage, '')
-
-    def test_find_description_returns_webpage_description(self):
-        run_find_webpage = self.crawler.find_webpage_metadata(self.get_test_soup(), 'description')
-        self.assertEqual(run_find_webpage, 'Page about cats and dogs')
-
-    def test_find_webpage_metadata_returns_empty_string_if_description_not_found(self):
-        empty_soup = BeautifulSoup('', 'html.parser')
-        run_find_webpage = self.crawler.find_webpage_metadata(empty_soup, 'description')
-        self.assertEqual(run_find_webpage, '')
-
-    def test_find_keywords_returns_webpage_description(self):
-        run_find_webpage = self.crawler.find_webpage_metadata(self.get_test_soup(), 'keywords')
-        self.assertEqual(run_find_webpage, 'cats,dogs')
-
-    def test_find_webpage_metadata_returns_empty_string_if_keywords_not_found(self):
-        empty_soup = BeautifulSoup('', 'html.parser')
-        run_find_webpage = self.crawler.find_webpage_metadata(empty_soup, 'keywords')
-        self.assertEqual(run_find_webpage, '')

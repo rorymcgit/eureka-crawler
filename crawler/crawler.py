@@ -1,13 +1,15 @@
 import urllib.request
 import sys
+import os
 from bs4 import BeautifulSoup
 from crawler.db_translator import Translator
-
+from crawler.parser import Parser
 
 class Crawler():
-    def __init__(self, translator = Translator()):
+    def __init__(self, translator = Translator(), parser = Parser()):
         sys.setrecursionlimit(10000)
         self.translator = translator
+        self.parser = parser
 
     def crawl(self, url):
         self.url = url
@@ -15,23 +17,20 @@ class Crawler():
             self.page = urllib.request.urlopen(url).read()
             self.translator.write_url(url)
             self.return_all_content()
-        except:
+        except urllib.error.HTTPError as err:
+            print("Error: ", err.code)
             self.crawl_next_url()
 
     def return_all_content(self):
         soup = BeautifulSoup(self.page, "html.parser", from_encoding="UTF-8")
         self.save_found_weburls(soup)
-        self.webpage_title = self.find_webpage_title(soup)
-        self.webpage_description = self.find_webpage_metadata(soup, 'description')
-        self.webpage_keywords = self.find_webpage_metadata(soup, 'keywords')
-        if self.empty_titles_and_descriptions(self.webpage_title, self.webpage_description):
+        page_metadata_dictionary = self.parser.create_soup_and_save_content(self.page)
+        if page_metadata_dictionary:
+            page_metadata_dictionary["url"] = self.url
+            self.translator.write_urls_and_content(page_metadata_dictionary)
             self.crawl_next_url()
         else:
-            self.translator.write_urls_and_content(self.url, self.webpage_title, self.webpage_description, self.webpage_keywords)
             self.crawl_next_url()
-
-    def empty_titles_and_descriptions(self, title, description):
-        return title == "" and description == ""
 
     def save_found_weburls(self, soup):
         self.webpage_urls = []
@@ -48,15 +47,8 @@ class Crawler():
         else:
             return self.translator.full_database_message()
 
-    def find_webpage_title(self, soup):
-        return soup.title.string if soup.title else ''
 
-    def find_webpage_metadata(self, soup, name):
-        try:
-            return soup.find("meta", {"name": name})['content']
-        except:
-            return ''
-
+# sites_to_crawl = "file://" + os.path.abspath("no_content.html")
 
 # crawler = Crawler()
 # crawler.crawl("http://www.makersacademy.com")
