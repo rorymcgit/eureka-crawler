@@ -46,6 +46,7 @@ class TestingTranslatorInitialize(unittest.TestCase):
         self.low_limit_translator = Translator('postgresql://localhost/beetle_crawler_test', 35)
         self.assertEqual(self.low_limit_translator.database_limit, 35)
 
+
     def test_prepare_urls_for_writing_to_db_calls_write_url(self):
         self.translator.write_url = MagicMock()
         retrieved_weburls = ['http://www.dogs.com', 'http://www.cats.com']
@@ -81,6 +82,27 @@ class TestingTranslatorInitialize(unittest.TestCase):
         statement = select([self.translator.weburls])
         results = self.test_database_connection.execute(statement)
         self.assertIn('http://translatortest.com', results.fetchone()['weburl'])
+
+    def test_write_url_WONT_save_duplicate_urls(self):
+        test_url = 'http://notsavedtwice.com'
+        self.translator.write_url(test_url)
+        self.translator.write_url(test_url)
+        select_statement = self.translator.weburls.select(self.translator.weburls.c.weburl == test_url)
+        result_proxy = self.test_database_connection.execute(select_statement)
+        results = [db_row[1] for db_row in result_proxy.fetchall()]
+        self.assertEqual(len(results), 1)
+
+    def test_write_url_calls_url_is_in_database(self):
+        self.translator.url_is_in_database = MagicMock()
+        test_url = 'http://www.checkmydb.com'
+        self.translator.write_url(test_url)
+        self.translator.url_is_in_database.assert_called_once()
+
+
+    def test_write_url_calls_cut_url(self):
+        self.translator.url_splicer.cut_url = MagicMock(return_value='https://www.example.com/home/')
+        self.translator.write_url('https://www.example.com/home/page')
+        self.translator.url_splicer.cut_url.assert_called_once_with('https://www.example.com/home/page')
 
     def test_write_url_WONT_save_duplicate_urls(self):
         test_url = 'http://notsavedtwice.com'
