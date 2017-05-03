@@ -4,12 +4,12 @@ function create_test_database() {
   echo "Creating test database"
   PSQL=psql
   $PSQL \
-    -c "CREATE DATABASE eureka_test";
+    -c "CREATE DATABASE beetle_crawler_test";
 }
 
 function create_tables_for_test() {
   echo "Creating tables for test database"
-  dbname="eureka_test"
+  dbname="beetle_crawler_test"
   psql $dbname <<SQL
     CREATE TABLE weburlsandtitles (id serial PRIMARY KEY, weburl varchar(65535), title varchar(65535));
     SELECT * FROM weburlsandtitles;
@@ -22,12 +22,12 @@ function create_development_database() {
   echo "Creating development database"
   PSQL=psql
   $PSQL \
-    -c "CREATE DATABASE eureka_development";
+    -c "CREATE DATABASE beetle_crawler_development";
 }
 
 function create_tables_for_development() {
   echo "Creating tables for development database"
-  dbname="eureka_development"
+  dbname="beetle_crawler_development"
   psql $dbname <<SQL
     CREATE TABLE weburlsandtitles (id serial PRIMARY KEY, weburl varchar(65535), title varchar(65535));
     SELECT * FROM weburlsandtitles;
