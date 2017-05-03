@@ -17,8 +17,8 @@ class Crawler():
             self.page = urllib.request.urlopen(url).read()
             self.translator.write_url(url)
             self.return_all_content()
-        except urllib.error.HTTPError as e:
-            print(e.code)
+        except urllib.error.HTTPError as err:
+            print("Error: ", err.code)
             self.crawl_next_url()
 
     def return_all_content(self):
@@ -51,4 +51,4 @@ class Crawler():
 # sites_to_crawl = "file://" + os.path.abspath("no_content.html")
 
 # crawler = Crawler()
-# crawler.crawl(sites_to_crawl)
+# crawler.crawl("http://www.makersacademy.com")
