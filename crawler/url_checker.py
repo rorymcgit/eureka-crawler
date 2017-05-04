@@ -19,6 +19,6 @@ class URLChecker:
                             'download-sha1',
                             'download.mozilla',
                             'donate.mozilla',
-                            'wikipedia.org'
+                            'wikipedia.org',
                             'bugzilla']
         return True if any(bad_link in url for bad_link in low_quality_links) else False
