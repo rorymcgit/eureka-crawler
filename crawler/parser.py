@@ -12,7 +12,7 @@ class Parser():
 
     def parse_webpage_content(self, soup):
         webpage_title = self.find_webpage_title(soup)
-        # print(webpage_title)
+        print(webpage_title)
         webpage_description = self.find_webpage_metadata(soup, 'description')
         webpage_keywords = self.find_webpage_metadata(soup, 'keywords')
         if self.check_empty_titles_and_descriptions(webpage_title, webpage_description):

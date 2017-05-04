@@ -21,6 +21,8 @@ class DatabaseReader():
             return self.connection.execute(next_url_statement).fetchone()['weburl']
         except TypeError:
             print(self.end_of_db_message())
+        except KeyError:
+            print(self.end_of_db_message())
 
     def get_weburls_table_size(self):
         select_all = select([self.weburls])

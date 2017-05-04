@@ -16,7 +16,10 @@ class Crawler():
             self.database_writer.write_url(url)
             self.return_all_content()
         except urllib.error.HTTPError as err:
-            print("Error: ", err.code)
+            print("HTTP Error: ", err.code)
+            self.crawl_next_url()
+        except urllib.error.URLError as err:
+            print("URL Error: ", err)
             self.crawl_next_url()
 
     def return_all_content(self):
@@ -33,6 +36,6 @@ class Crawler():
 
     def crawl_next_url(self):
         next_url_to_crawl = self.database_reader.get_next_url()
-        # print("NEXT URL TO CRAWL: ", next_url_to_crawl)
+        print("NEXT URL TO CRAWL: ", next_url_to_crawl)
         if next_url_to_crawl:
             self.crawl(next_url_to_crawl)
