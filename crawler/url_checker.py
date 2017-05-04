@@ -1,4 +1,3 @@
-
 class URLChecker:
 
     def url_is_valid(self, url):
