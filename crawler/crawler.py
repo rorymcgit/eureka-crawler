@@ -2,6 +2,7 @@ import urllib.request
 from crawler.database_writer import DatabaseWriter
 from crawler.database_reader import DatabaseReader
 from crawler.parser import Parser
+from crawler.color import Color as color
 
 class Crawler():
     def __init__(self, database_writer = DatabaseWriter(), database_reader = DatabaseReader(), parser = Parser()):
@@ -36,6 +37,6 @@ class Crawler():
 
     def crawl_next_url(self):
         next_url_to_crawl = self.database_reader.get_next_url()
-        print("NEXT URL TO CRAWL: ", next_url_to_crawl)
+        print("%sCrawling: %s" % (color.CYAN, color.EC), next_url_to_crawl)
         if next_url_to_crawl:
             self.crawl(next_url_to_crawl)

@@ -3,6 +3,7 @@ from mock import Mock
 from mock import MagicMock
 from crawler.crawler import Crawler
 from bs4 import BeautifulSoup
+
 import os
 
 class TestingCrawler(unittest.TestCase):

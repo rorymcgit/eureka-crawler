@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+from crawler.color import Color as color
 
 class Parser():
     def soupify_page(self, page):
@@ -12,7 +13,7 @@ class Parser():
 
     def parse_webpage_content(self, soup):
         webpage_title = self.find_webpage_title(soup)
-        print(webpage_title)
+        print(color.GREEN, webpage_title, color.EC)
         webpage_description = self.find_webpage_metadata(soup, 'description')
         webpage_keywords = self.find_webpage_metadata(soup, 'keywords')
         if self.check_empty_titles_and_descriptions(webpage_title, webpage_description):
@@ -34,7 +35,7 @@ class Parser():
     def find_webpage_metadata(self, soup, name):
         try:
             return soup.find("meta", {"name": name})['content']
-        except TypeError:
+        except (TypeError, KeyError):
             return ''
 
     def check_empty_titles_and_descriptions(self, title, description):
