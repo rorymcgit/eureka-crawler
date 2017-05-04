@@ -11,7 +11,6 @@ class TestingParser(unittest.TestCase):
         self.parser = Parser()
         self.test_soup = BeautifulSoup('<!DOCTYPE html>\n<html>\n\n<head>\n <title>Cats and Dogs</title> \n<meta name="description" content="Page about cats and dogs"> \n <meta name="keywords" content="cats,dogs">\n</head><body><a href="www.dogs.com">Dogs</a><a href="www.cats.com">Cats</a></body></html>', 'html.parser')
         self.bad_test_soup = BeautifulSoup('<!DOCTYPE html>\n<html>', 'html.parser')
-        # self.test_page = urllib.request.urlopen(url).read()
 
     def test_parser_is_instance_of_Parser(self):
         self.assertIsInstance(self.parser, Parser)
@@ -59,15 +58,15 @@ class TestingParser(unittest.TestCase):
         self.assertEqual(run_find_webpage_metadata, '')
 
 
-    def test_empty_titles_and_descriptions_returns_true(self):
+    def test_check_empty_titles_and_descriptions_returns_true(self):
         title = ''
         description = ''
-        self.assertTrue(self.parser.empty_titles_and_descriptions(title, description))
+        self.assertTrue(self.parser.check_empty_titles_and_descriptions(title, description))
 
-    def test_empty_titles_and_descriptions_returns_false(self):
+    def test_check_empty_titles_and_descriptions_returns_false(self):
         title = "The best website ever"
         description = "This is clearly the best website, you want to visit it"
-        self.assertFalse(self.parser.empty_titles_and_descriptions(title, description))
+        self.assertFalse(self.parser.check_empty_titles_and_descriptions(title, description))
 
 
     def test_parse_webpages_links_returns_an_array(self):
