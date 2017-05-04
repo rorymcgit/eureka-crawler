@@ -15,7 +15,7 @@ class Translator():
 
     def write_url(self, url):
         if self.get_weburls_table_size() < self.database_limit:
-            if self.url_checker(url):
+            if self.url_is_valid(url):
                 url = self.cut_string(url)
                 if not self.url_is_in_database(url):
                     statement = insert(self.weburls).values(weburl = url)
@@ -25,26 +25,15 @@ class Translator():
 
     def write_urls_and_content(self, page_metadata_dictionary):
         statement = insert(self.weburlsandcontent).values(
-            weburl = page_metadata_dictionary['url'],
-            title = page_metadata_dictionary['title'],
-            description = page_metadata_dictionary['description'],
-            keywords = page_metadata_dictionary['keywords'])
+                        weburl = page_metadata_dictionary['url'],
+                        title = page_metadata_dictionary['title'],
+                        description = page_metadata_dictionary['description'],
+                        keywords = page_metadata_dictionary['keywords'])
         self.connection.execute(statement)
 
     def prepare_urls_for_writing_to_db(self, weburls):
         for url in weburls:
             self.write_url(url)
-
-    def get_weburls_table_size(self):
-        select_all = select([self.weburls])
-        return self.connection.execute(select_all).rowcount
-
-    def get_weburls_and_content_table_size(self):
-        select_all = select([self.weburlsandcontent])
-        return self.connection.execute(select_all).rowcount
-
-    def both_tables_are_not_full_yet(self):
-        return self.get_weburls_table_size() < self.database_limit or self.get_weburls_and_content_table_size() < self.database_limit
 
     def get_next_url(self):
         self.current_id += 1
@@ -54,13 +43,21 @@ class Translator():
         except TypeError:
             print(self.end_of_db_message())
 
+    def get_weburls_table_size(self):
+        select_all = select([self.weburls])
+        return self.connection.execute(select_all).rowcount
+
+    def get_weburls_and_content_table_size(self):
+        select_all = select([self.weburlsandcontent])
+        return self.connection.execute(select_all).rowcount
+
     def url_is_in_database(self, url):
         select_statement = self.weburls.select(self.weburls.c.weburl == url)
         res_proxy = self.connection.execute(select_statement)
         results = [item[1] for item in res_proxy.fetchall()]
         return len(results)
 
-    def url_checker(self, url):
+    def url_is_valid(self, url):
         return self.check_url_beginning(url) and self.check_url_domain(url) and not self.is_low_quality_link(url)
 
     def check_url_beginning(self, url):
@@ -75,15 +72,9 @@ class Translator():
 
     def find_nth(self, haystack, needle, n):
         parts = haystack.split(needle, n+1)
-        if len(parts)<=n+1:
+        if len(parts) <= n+1:
             return -1
         return len(haystack)-len(parts[-1])-len(needle)
-
-    def end_of_db_message(self):
-        return "No more web urls to crawl in the table."
-
-    def full_database_message(self):
-        return "The database is full."
 
     def cut_string(self, url):
         if url.count('/') >= 4:
@@ -91,3 +82,6 @@ class Translator():
             return url[:string_cut]
         else:
             return url
+
+    def end_of_db_message(self):
+        return "No more web urls to crawl in the table."
