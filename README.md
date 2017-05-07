@@ -12,7 +12,6 @@ Team:
 ## Installation
 
 - Clone this repo
-<<<<<<< HEAD
 
 To create your test and development databases with required tables:
 - Run ```./db-config.sh```. *If you get an error regarding permissions, you'll need to run ```chmod +x db-config.sh```, and then run ```./db-config.sh``` again.*
