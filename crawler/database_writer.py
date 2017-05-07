@@ -7,7 +7,7 @@ from crawler.database_reader import DatabaseReader
 
 class DatabaseWriter():
     def __init__(self,
-                db = 'postgresql://localhost/beetle_crawler_development',
+                db = 'postgresql://localhost/eureka_development',
                 database_limit = 1000,
                 url_checker = URLChecker(),
                 url_splicer = URLSplicer(),

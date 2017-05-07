@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 
 
 class DatabaseReader():
-    def __init__(self, db = 'postgresql://localhost/beetle_crawler_development'):
+    def __init__(self, db = 'postgresql://localhost/eureka_development'):
         self.set_up_database(db)
         self.current_id = 1
 

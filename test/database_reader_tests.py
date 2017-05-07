@@ -10,7 +10,7 @@ class TestingDatabaseReader(unittest.TestCase):
 
     def setUp(self):
         self.database_writer = MagicMock()
-        self.database_reader = DatabaseReader('postgresql://localhost/beetle_crawler_test')
+        self.database_reader = DatabaseReader('postgresql://localhost/eureka_test')
         self.test_database_connection = self.database_reader.connection
 
     def tearDown(self):

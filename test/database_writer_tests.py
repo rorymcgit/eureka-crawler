@@ -12,7 +12,7 @@ class TestingDatabaseWriter(unittest.TestCase):
         self.url_splicer = MagicMock()
         self.database_reader = MagicMock()
         self.database_reader.get_weburls_table_size = MagicMock(return_value = 0)
-        self.database_writer = DatabaseWriter('postgresql://localhost/beetle_crawler_test',
+        self.database_writer = DatabaseWriter('postgresql://localhost/eureka_test',
                                                 1000,
                                                 self.url_checker,
                                                 self.url_splicer,
@@ -46,7 +46,7 @@ class TestingDatabaseWriter(unittest.TestCase):
         self.assertIsInstance(self.database_writer.weburlsandcontent, Table)
 
     def test_database_writer_changeable_database_limit(self):
-        self.low_limit_database_writer = DatabaseWriter('postgresql://localhost/beetle_crawler_test', 35)
+        self.low_limit_database_writer = DatabaseWriter('postgresql://localhost/eureka_test', 35)
         self.assertEqual(self.low_limit_database_writer.database_limit, 35)
 
 
