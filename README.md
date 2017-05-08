@@ -14,9 +14,20 @@ Team:
 - Clone this repo
 
 To create your test and development databases with required tables:
-- Run ```./db-config.sh```. *If you get an error regarding permissions, you'll need to run ```chmod +x db-config.sh```, and then run ```./db-config.sh``` again.*
+- Run `./db-config.sh`. *If you get an error regarding permissions, you'll need to run ```chmod +x db-config.sh```, and then run ```./db-config.sh``` again.*
+- To run all tests `python3 -m unittest discover -s test -p "*_tests.py"`
 
 To crawl:
-- Open /initiate_crawl.py
+- Open ./initiate_crawl.py
+- Set desired database limit
 - Enter a website to begin crawling
-- Run ```python3 initiate_crawl.py```
+- Run `python3 initiate_crawl.py`
+
+## Technologies
+
+- Python3
+- BeautifulSoup4 (HTML parsing)
+- PyUnit (testing framework)
+- MagicMock (test doubles)
+- PostgreSQL
+- SQLAlchemy
