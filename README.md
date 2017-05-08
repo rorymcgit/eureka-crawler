@@ -7,6 +7,8 @@ We chose to build a search engine, writing the crawler in Python and the [query 
 
 Central throughout the project were TDD/BDD, XP values and agile practices. We used a Kanban workflow to manage the project's progression.
 
+On our latest crawl, the program visited over 28'000 webpages, filtering content down to 4'600 high-quality searchable results.
+
 Team:
 - [Clem Capel-Bird](https://github.com/ClemCB)
 - [Nicholas Leacock](https://github.com/marudine)
