@@ -1,7 +1,7 @@
 # Eureka Web Crawler
 
 
-This is a Makers Academy final project. We were tasked with working on a project of our choice in languages, testing frameworks and technologies of our choice.
+This is a Makers Academy final project. We were tasked with working on a project of our choice in languages, testing frameworks and technologies of our choice over the course of 11 days.
 
 We chose to build a search engine, writing the crawler in Python and the [query engine](https://github.com/rorymcgit/eureka-search) in Node.js.
 
