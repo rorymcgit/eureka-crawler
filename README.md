@@ -16,6 +16,8 @@ Team:
 ## Installation
 
 - Clone this repo
+- If you don't already have Python 3 installed run `brew install python3`
+- Run `pip3 install -r requirements.txt` to install dependencies
 
 To create your test and development databases with required tables:
 - Run `./db-config.sh`. *If a permissions error is returned, you'll need to run ```chmod +x db-config.sh```, and then run ```./db-config.sh``` again.*

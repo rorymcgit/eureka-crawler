@@ -7,8 +7,8 @@ class URLSplicer():
         else:
             return url
 
-    def find_nth(self, url, forward_slash, n):
-        parts = url.split(forward_slash, n+1)
+    def find_nth(self, url, splitter, n):
+        parts = url.split(splitter, n+1)
         if len(parts) <= n+1:
             return -1
-        return len(url)-len(parts[-1])-len(forward_slash)
+        return len(url)-len(parts[-1])-len(splitter)
