@@ -11,8 +11,8 @@ function create_tables_for_test() {
   echo "Creating tables for test database"
   dbname="eureka_test"
   psql $dbname <<SQL
-    CREATE TABLE weburlsandtitles (id serial PRIMARY KEY, weburl varchar(65535), title varchar(65535));
-    SELECT * FROM weburlsandtitles;
+    CREATE TABLE weburlsandcontent (id serial PRIMARY KEY, weburl varchar(65535), title varchar(65535), description varchar(65535), keywords varchar(65535));
+    SELECT * FROM weburlsandcontent;
     CREATE TABLE weburls (id serial PRIMARY KEY, weburl varchar(65535));
     SELECT * FROM weburls;
 SQL
@@ -29,8 +29,8 @@ function create_tables_for_development() {
   echo "Creating tables for development database"
   dbname="eureka_development"
   psql $dbname <<SQL
-    CREATE TABLE weburlsandtitles (id serial PRIMARY KEY, weburl varchar(65535), title varchar(65535));
-    SELECT * FROM weburlsandtitles;
+    CREATE TABLE weburlsandcontent (id serial PRIMARY KEY, weburl varchar(65535), title varchar(65535), description varchar(65535), keywords varchar(65535));
+    SELECT * FROM weburlsandcontent;
     CREATE TABLE weburls (id serial PRIMARY KEY, weburl varchar(65535));
     SELECT * FROM weburls;
 SQL
