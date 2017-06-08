@@ -5,7 +5,10 @@ from crawler.parser import Parser
 from crawler.color import Color as color
 
 class Crawler():
-    def __init__(self, database_writer = DatabaseWriter(), database_reader = DatabaseReader(), parser = Parser()):
+    def __init__(self,
+                 database_writer = DatabaseWriter(),
+                 database_reader = DatabaseReader(),
+                 parser = Parser()):
         self.database_writer = database_writer
         self.database_reader = database_reader
         self.parser = parser
